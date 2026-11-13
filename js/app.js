@@ -8,6 +8,9 @@
 import { cargarLuz, copiaLuz } from './datos-luz.js';
 import { pintarLuz, resumenLuz, prepararDialogoAviso } from './luz.js';
 import { hora, escapar } from './formato.js';
+import { iniciarGasolina, buscarCercaDeMi, resumenGasolina } from './gasolina.js';
+import { cargarGasolineras, leerPreferencias, pedirUbicacion, ubicacionPermitida } from './datos-gasolina.js';
+import { buscarMunicipio } from './calculos-gasolina.js';
 
 // ---- 1. Pestañas -----------------------------------------------------------
 // Usamos la parte de la dirección tras la "#" (#luz, #gasolina...). Así el botón
@@ -22,6 +25,15 @@ function mostrarVista() {
   }
   document.getElementById('principal').focus({ preventScroll: true });
   window.scrollTo(0, 0);
+  // La pantalla de gasolina se prepara la primera vez que se abre (ahorra datos a quien solo mira la luz).
+  if (actual === 'gasolina') asegurarGasolina();
+}
+
+let gasolinaIniciada = false;
+function asegurarGasolina() {
+  if (gasolinaIniciada) return;
+  gasolinaIniciada = true;
+  iniciarGasolina();
 }
 window.addEventListener('hashchange', mostrarVista);
 
@@ -84,6 +96,52 @@ function pintarInicio(luz) {
     <a class="boton" href="#luz">Ver todas las horas</a>`;
 }
 
+/**
+ * Resumen de gasolina en Inicio. Para no molestar al abrir la app, solo usa la
+ * ubicación si el usuario ya dio permiso antes; si no, usa el municipio que
+ * buscó la última vez; y si tampoco, muestra un botón.
+ */
+async function pintarInicioGasolina() {
+  const caja = document.getElementById('resumen-gasolina');
+  const boton = `<button class="boton" type="button" id="inicio-cerca">📍 Ver la más barata cerca de mí</button>
+    <a class="boton secundario" href="#gasolina">Buscar por municipio</a>`;
+  const conectarBoton = () => caja.querySelector('#inicio-cerca')?.addEventListener('click', () => {
+    location.hash = '#gasolina';
+    asegurarGasolina();
+    buscarCercaDeMi();
+  });
+
+  try {
+    const prefs = leerPreferencias();
+    let punto = null;
+    let zona = '';
+    if (await ubicacionPermitida()) {
+      punto = await pedirUbicacion().catch(() => null);
+      zona = 'ti';
+    }
+    if (!punto && prefs.municipio) {
+      const datos = await cargarGasolineras();
+      const [m] = buscarMunicipio(datos.estaciones, prefs.municipio);
+      if (m) { punto = m.centro; zona = m.municipio; }
+    }
+    if (!punto) {
+      caja.innerHTML = `<p>Encuentra la gasolinera más barata de tu zona y cuánto ahorras llenando el depósito.</p>${boton}`;
+      conectarBoton();
+      return;
+    }
+    const r = await resumenGasolina(punto, zona);
+    if (!r) { caja.innerHTML = `<p>No hay gasolineras cerca con tu combustible.</p>${boton}`; conectarBoton(); return; }
+    caja.innerHTML = `
+      <p class="grande">La gasolinera más barata cerca de ${escapar(zona)} es <strong>${escapar(r.rotulo)}</strong>:
+        ${escapar(r.precio)} de ${escapar(r.combustible)}, a ${escapar(r.distancia)}.</p>
+      ${r.ahorro ? `<p>Ahorras <strong>${escapar(r.ahorro)}</strong> llenando ${r.litros} L frente a la media.</p>` : ''}
+      <a class="boton" href="#gasolina">Ver todas</a>`;
+  } catch {
+    caja.innerHTML = `<p>No hemos podido cargar las gasolineras ahora mismo.</p>${boton}`;
+    conectarBoton();
+  }
+}
+
 // ---- 4. Service worker (uso sin conexión) -----------------------------------
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
@@ -95,5 +153,6 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => apli
 prepararDialogoAviso();
 mostrarVista();
 cargarTodo();
+pintarInicioGasolina();
 // Si la app se queda abierta, refrescamos cada 15 minutos (el precio cambia cada hora).
 setInterval(cargarTodo, 15 * 60_000);

@@ -4,7 +4,7 @@
 // Patrón que usamos en toda la app:
 //   datos  →  funciones de calculos.js  →  texto HTML  →  pantalla
 // =====================================================================
-import { clasificarHoras, recomendarFranja, extremos, sumarUnaHora } from './calculos.js';
+import { clasificarHoras, recomendarFranja, extremos, sumarUnaHora, horasDesde } from './calculos.js';
 import { precioKwh, euros, hora, franja, fechaLarga } from './formato.js';
 import { descargarICS, programarNotificacion } from './aviso.js';
 
@@ -33,7 +33,9 @@ export function pintarLuz(datos, contenedor) {
 /** Frase corta para la pantalla de inicio. */
 export function resumenLuz(datos, ahora = new Date()) {
   if (!datos || datos.hoy.length === 0) return null;
-  let r = recomendarFranja(datos.hoy, 3, { desde: ahora });
+  // Si quedan pocas horas hoy y ya se sabe mañana, es más útil hablar de mañana.
+  const quedanPocas = horasDesde(datos.hoy, ahora).length < 6;
+  let r = quedanPocas && datos.manana.length ? null : recomendarFranja(datos.hoy, 3, { desde: ahora });
   let cuando = 'hoy';
   if (!r && datos.manana.length) { r = recomendarFranja(datos.manana, 3); cuando = 'mañana'; }
   const actual = horaActual(clasificarHoras(datos.hoy), ahora);

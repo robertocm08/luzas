@@ -11,6 +11,10 @@ export function sumarDias(fecha, dias) {
   return new Date(Date.UTC(a, m - 1, d + dias)).toISOString().slice(0, 10);
 }
 
+/** Todas las gasolineras de España con sus precios (Ministerio, unos 12 MB). */
+export const URL_GASOLINERAS =
+  'https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/';
+
 /**
  * Dirección de la API de Red Eléctrica para los precios PVPC de hoy y mañana.
  * Mañana solo aparece a partir de las ~20:15, cuando se publica.

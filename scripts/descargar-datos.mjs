@@ -11,7 +11,8 @@
 // =====================================================================
 import { mkdir, writeFile } from 'node:fs/promises';
 import { leerRespuestaREE } from '../js/calculos.js';
-import { urlLuzREE } from '../js/fuentes.js';
+import { urlLuzREE, URL_GASOLINERAS } from '../js/fuentes.js';
+import { compactarMinisterio } from '../js/calculos-gasolina.js';
 
 const CARPETA = new URL('../data/', import.meta.url);
 const SITE_URL = process.env.SITE_URL ?? '';
@@ -35,6 +36,18 @@ async function descargarLuz() {
   };
 }
 
+// ---- Gasolineras ------------------------------------------------------------
+async function descargarGasolineras() {
+  const compacto = compactarMinisterio(await pedirJSON(URL_GASOLINERAS, 120));
+  if (compacto.estaciones.length < 5000) throw new Error(`solo ${compacto.estaciones.length} gasolineras`);
+  return {
+    actualizado: new Date().toISOString(),
+    fuente: 'Ministerio para la Transición Ecológica (sedeaplicaciones.minetur.gob.es)',
+    unidad: '€/litro',
+    ...compacto,
+  };
+}
+
 // ---- Utilidad: descarga con plan B ------------------------------------------
 async function guardar(nombre, descargar) {
   let datos;
@@ -51,9 +64,11 @@ async function guardar(nombre, descargar) {
 }
 
 await mkdir(CARPETA, { recursive: true });
+const tareas = [['luz.json', descargarLuz], ['gasolineras.json', descargarGasolineras]];
 let fallos = 0;
-for (const [nombre, fn] of [['luz.json', descargarLuz]]) {
+for (const [nombre, fn] of tareas) {
   try { await guardar(nombre, fn); } catch (e) { fallos++; console.error(`✘ ${nombre}: ${e.message}`); }
 }
-// Si no hay ningún dato, que la Action falle y GitHub nos avise por correo.
-if (fallos > 0) process.exitCode = 1;
+// Si falla una fuente, se publica igualmente la otra (la app sabe arreglárselas).
+// Solo si fallan TODAS, la Action termina en error y GitHub te avisa por correo.
+if (fallos === tareas.length) process.exitCode = 1;

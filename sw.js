@@ -8,7 +8,7 @@
 // Si cambias la lista de archivos, sube el número de VERSION para que los
 // móviles borren la copia antigua.
 // =====================================================================
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE_APP = `luzas-app-${VERSION}`;
 const CACHE_DATOS = 'luzas-datos';
 const DESARROLLO = ['localhost', '127.0.0.1'].includes(self.location.hostname);
@@ -25,6 +25,10 @@ const ARCHIVOS_APP = [
   'js/datos-luz.js',
   'js/luz.js',
   'js/aviso.js',
+  'js/calculos-gasolina.js',
+  'js/datos-gasolina.js',
+  'js/gasolina.js',
+  'js/mapa.js',
   'iconos/icono.svg',
   'iconos/icono-192.png',
 ];
@@ -51,8 +55,15 @@ self.addEventListener('fetch', (evento) => {
   if (peticion.method !== 'GET') return;
   const url = new URL(peticion.url);
 
-  // Solo nos ocupamos de nuestros propios archivos. Las APIs externas (REE...)
-  // van directas; la app ya guarda su propia copia de esos datos.
+  // La librería del mapa (Leaflet) no cambia nunca: se guarda la primera vez y se reutiliza.
+  if (url.hostname === 'cdnjs.cloudflare.com') {
+    evento.respondWith(caches.open(CACHE_APP).then(async (cache) =>
+      (await cache.match(peticion)) ?? fetch(peticion).then((resp) => { if (resp.ok) cache.put(peticion, resp.clone()); return resp; })));
+    return;
+  }
+
+  // Del resto de cosas externas (APIs de REE y del Ministerio, mapas) no nos ocupamos:
+  // van directas, y la app ya guarda su propia copia de los datos.
   if (url.origin !== self.location.origin) return;
 
   if (url.pathname.includes('/data/')) {

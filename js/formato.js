@@ -24,6 +24,23 @@ export const fechaLarga = (iso) => {
   return t.charAt(0).toUpperCase() + t.slice(1); // "Viernes, 13 de noviembre"
 };
 
+/** 1.459 → "1,459 €/L" */
+export const precioLitro = (p) => `${euros3.format(p)} €/L`;
+
+/** 2.345 → "2,3 km" ; 0.45 → "450 m" */
+export const distancia = (km) =>
+  km < 1 ? `${Math.round(km * 1000 / 10) * 10} m` : `${km.toLocaleString('es-ES', { maximumFractionDigits: 1 })} km`;
+
+/**
+ * El Ministerio escribe todo en MAYÚSCULAS. Lo pasamos a un formato más fácil de leer:
+ * "AVENIDA DE LA CONSTITUCIÓN, 26" → "Avenida de la Constitución, 26"
+ */
+const PEQUENAS = new Set(['de', 'del', 'la', 'las', 'el', 'los', 'y', 'a', 'en']);
+export function capitalizar(texto) {
+  return String(texto ?? '').toLowerCase().replace(/[\p{L}\d]+/gu, (palabra, posicion) =>
+    posicion > 0 && PEQUENAS.has(palabra) ? palabra : palabra.charAt(0).toUpperCase() + palabra.slice(1));
+}
+
 /** Evita que un texto que venga de fuera se interprete como HTML. */
 export function escapar(texto) {
   return String(texto ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

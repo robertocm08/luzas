@@ -153,6 +153,55 @@ main { max-width: 640px; margin: 0 auto; padding: 8px 16px 24px; }
 .fila.nivel-caro   .g-precio { color: var(--caro-texto); }
 .fila.es-ahora { outline: 3px solid var(--texto); background: var(--superficie); }
 
+/* ---- Gasolina: formulario ---- */
+fieldset { border: none; padding: 0; margin: 0; }
+legend, .etiqueta-campo { font-weight: 700; display: block; margin: 0 0 6px; }
+.etiqueta-campo { margin-top: 16px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip span {
+  display: inline-flex; align-items: center; min-height: 48px; padding: 6px 14px; cursor: pointer;
+  border: 2px solid var(--borde); border-radius: 999px; background: var(--superficie); font-weight: 600;
+}
+.chip input:checked + span { background: var(--primario); color: var(--primario-texto); border-color: var(--primario); }
+.chip input:checked + span::before { content: "✓ "; white-space: pre; }
+.chip input:focus-visible + span { outline: 3px solid var(--foco); outline-offset: 2px; }
+input[type="number"], input[type="search"] {
+  font: inherit; min-height: 52px; padding: 8px 12px; border-radius: 12px;
+  border: 2px solid var(--borde); background: var(--superficie); color: var(--texto); width: 100%;
+}
+.fila-litros { display: grid; grid-template-columns: 1fr auto auto auto; gap: 8px; }
+.fila-litros input { width: 100%; }
+.fila-busqueda { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.boton-buscar { margin-top: 0; width: auto; }
+.separador { display: flex; align-items: center; gap: 10px; color: var(--texto-suave); margin: 14px 0 0; }
+.separador::before, .separador::after { content: ""; flex: 1; border-top: 1px solid var(--borde); }
+
+/* ---- Gasolina: resultados ---- */
+.resumen-zona { border-left: 8px solid var(--barato); }
+.mapa { height: 320px; border-radius: var(--radio); border: 1px solid var(--borde); margin: 12px 0; z-index: 0; }
+.lista-gasolineras { list-style: none; padding: 0; margin: 0; }
+.gasolinera { scroll-margin: 80px; transition: box-shadow 0.3s; }
+.gasolinera.resaltada { box-shadow: 0 0 0 4px var(--foco); }
+.g-cabecera { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
+.g-cabecera h3 { margin: 0; overflow-wrap: anywhere; }
+.puesto {
+  display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
+  border-radius: 50%; background: var(--texto); color: var(--fondo); font-weight: 800;
+}
+.precio-g { font-size: 1.35rem; font-weight: 800; margin: 0; white-space: nowrap; }
+.ahorro { font-weight: 600; }
+.ahorro.positivo { color: var(--barato-texto); background: var(--barato-fondo); padding: 4px 10px; border-radius: 8px; }
+.ahorro.negativo { color: var(--caro-texto); }
+
+/* Marcadores del mapa: círculo con el número del puesto */
+.marcador span {
+  display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;
+  background: #15171a; color: #fff; font: 800 15px/1 system-ui, sans-serif; border: 3px solid #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
+}
+.marcador-mejor span { background: #1e8e4e; width: 40px; height: 40px; margin: -3px; font-size: 17px; }
+
 /* ---- Barra de pestañas inferior ---- */
 .pestanas {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
