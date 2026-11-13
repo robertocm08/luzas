@@ -8,7 +8,7 @@
 // Si cambias la lista de archivos, sube el número de VERSION para que los
 // móviles borren la copia antigua.
 // =====================================================================
-const VERSION = 'v3';
+const VERSION = 'v5';
 const CACHE_APP = `luzas-app-${VERSION}`;
 const CACHE_DATOS = 'luzas-datos';
 const DESARROLLO = ['localhost', '127.0.0.1'].includes(self.location.hostname);
@@ -35,6 +35,7 @@ const ARCHIVOS_APP = [
   'js/pagamenos.js',
   'privacidad.html',
   'iconos/icono.svg',
+  'fuentes/sora.woff2',
   'iconos/icono-192.png',
 ];
 

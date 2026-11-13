@@ -67,7 +67,7 @@ export function pedirConsentimiento({ alAceptar }) {
   aviso.setAttribute('role', 'dialog');
   aviso.setAttribute('aria-labelledby', 'aviso-cookies-titulo');
   aviso.innerHTML = `
-    <h2 id="aviso-cookies-titulo">🍪 ¿Nos ayudas con publicidad?</h2>
+    <h2 id="aviso-cookies-titulo">¿Nos ayudas con publicidad?</h2>
     <p>Esta app es gratis gracias a los anuncios. Para mostrarlos, Google y sus socios usan cookies que
        pueden recordar tus visitas. <strong>Solo los cargaremos si aceptas.</strong> Si rechazas, la app
        funciona exactamente igual, sin anuncios.</p>

@@ -8,6 +8,9 @@ const euros2 = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EU
 /** 0.15911 → "0,159 €/kWh" */
 export const precioKwh = (p) => `${euros3.format(p)} €/kWh`;
 
+/** 0.15911 → "0,159" (para mostrar la cifra grande y la unidad aparte) */
+export const numero3 = (p) => euros3.format(p);
+
 /** 0.4 → "0,40 €" (cantidades pequeñas: muestra céntimos si hace falta) */
 export const euros = (e) => euros2.format(e);
 
@@ -40,6 +43,14 @@ export function capitalizar(texto) {
   return String(texto ?? '').toLowerCase().replace(/[\p{L}\d]+/gu, (palabra, posicion) =>
     posicion > 0 && PEQUENAS.has(palabra) ? palabra : palabra.charAt(0).toUpperCase() + palabra.slice(1));
 }
+
+/** Icono del juego de iconos de index.html: icono('rayo') → <svg>…</svg> */
+export const icono = (nombre, clase = '') =>
+  `<svg class="icono ${clase}" aria-hidden="true"><use href="#i-${nombre}"/></svg>`;
+
+/** Bloques grises animados mientras algo carga. altos = [24, 48, 20] (en px) */
+export const esqueleto = (altos = [24, 48, 20]) =>
+  altos.map((h, i) => `<span class="esqueleto" style="height:${h}px;${i === 0 ? 'width:45%' : ''}"></span>`).join('');
 
 /** Evita que un texto que venga de fuera se interprete como HTML. */
 export function escapar(texto) {

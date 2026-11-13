@@ -1,267 +1,491 @@
 /* =====================================================================
-   estilos.css — Aspecto de la app.
-   Pensada primero para el móvil: textos grandes, alto contraste,
-   botones de al menos 48 px de alto y modo oscuro.
-   Los colores se definen una sola vez como "variables" (--nombre) y el
-   modo oscuro simplemente cambia esas variables.
+   estilos.css — Aspecto de la app: estilo "Cristal y aurora".
+
+   - Fondo: una aurora de color (violeta, cian y rosa) que se mueve despacio.
+   - Tarjetas de cristal translúcido con borde brillante.
+   - Letra Sora (guardada en /fuentes, sin pedirla a Google).
+   - Oscura por defecto; versión clara con [data-theme="light"].
+   - Accesible: textos grandes, contraste ≥ 4,5:1, botones ≥ 48 px. Si el
+     móvil pide "reducir movimiento" o "reducir transparencia", se respeta.
    ===================================================================== */
 
+@font-face {
+  font-family: "Sora";
+  src: url("../fuentes/sora.woff2") format("woff2");
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+/* ---- Colores: OSCURO (por defecto) ---- */
 :root {
-  --fondo: #f6f7f4;
-  --superficie: #ffffff;
-  --texto: #15171a;
-  --texto-suave: #4a5058;
-  --borde: #d5d9dd;
-  --primario: #0b5d3b;
+  --fondo: #08061a;
+  --aurora-1: #7c3aed;  /* violeta */
+  --aurora-2: #06b6d4;  /* cian */
+  --aurora-3: #db2777;  /* rosa */
+  --aurora-opacidad: 0.55;
+
+  --cristal: rgb(255 255 255 / 0.07);
+  --cristal-fuerte: rgb(20 16 48 / 0.72);
+  --cristal-borde: rgb(255 255 255 / 0.14);
+  --cristal-brillo: inset 0 1px 0 rgb(255 255 255 / 0.12);
+  --sombra: 0 10px 40px rgb(0 0 0 / 0.35);
+  --relleno: rgb(255 255 255 / 0.08);     /* fondos de controles, barras vacías */
+  --relleno-fuerte: rgb(255 255 255 / 0.16);
+
+  --texto: #f5f3ff;
+  --texto-suave: #c9c4ec;
+  --borde: rgb(255 255 255 / 0.14);
+
+  --primario: #22d3ee;              /* cian eléctrico: enlaces, foco, activo */
+  --primario-texto: #04131a;
+  --boton-desde: #7c3aed;           /* botón principal: degradado violeta → azul */
+  --boton-hasta: #2563eb;
+  --boton-texto: #ffffff;
+  --foco: #67e8f9;
+  --cifra-desde: #ffffff;           /* cifras grandes con degradado */
+  --cifra-hasta: #a5f3fc;
+
+  --luz: #fbbf24;  --luz-tinte: rgb(251 191 36 / 0.16);  --luz-borde: rgb(251 191 36 / 0.40);  --luz-texto: #fde68a;  --sobre-luz: #2a1800;
+  --gas: #38bdf8;  --gas-tinte: rgb(56 189 248 / 0.15);  --gas-borde: rgb(56 189 248 / 0.40);  --gas-texto: #bae6fd;  --sobre-gas: #021a2b;
+  --violeta: #a78bfa; --violeta-tinte: rgb(167 139 250 / 0.16); --violeta-borde: rgb(167 139 250 / 0.40); --sobre-violeta: #150a33;
+
+  --barato: #4ade80;  --barato-fondo: rgb(74 222 128 / 0.16);  --barato-texto: #bbf7d0;
+  --normal: #fbbf24;  --normal-fondo: rgb(251 191 36 / 0.16);  --normal-texto: #fde68a;
+  --caro:   #fb7185;  --caro-fondo:   rgb(251 113 133 / 0.18); --caro-texto:   #fecdd3;
+  --verde-solido: #15803d;
+
+  --radio: 24px;
+  --radio-pequeno: 14px;
+  --filtro-mapa: invert(1) hue-rotate(200deg) brightness(0.85) contrast(0.9) saturate(0.8);
+  --alto-pestanas: 84px;
+  color-scheme: dark;
+}
+
+/* ---- Colores: CLARO (si el usuario lo elige con el botón) ---- */
+:root[data-theme="light"] {
+  --fondo: #eef0ff;
+  --aurora-1: #a78bfa;
+  --aurora-2: #67e8f9;
+  --aurora-3: #f9a8d4;
+  --aurora-opacidad: 0.6;
+
+  --cristal: rgb(255 255 255 / 0.62);
+  --cristal-fuerte: rgb(255 255 255 / 0.86);
+  --cristal-borde: rgb(255 255 255 / 0.9);
+  --cristal-brillo: inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --sombra: 0 10px 34px rgb(76 29 149 / 0.12);
+  --relleno: rgb(30 20 80 / 0.06);
+  --relleno-fuerte: rgb(30 20 80 / 0.12);
+
+  --texto: #14112b;
+  --texto-suave: #4a4470;
+  --borde: rgb(30 20 80 / 0.14);
+
+  --primario: #5b21b6;
   --primario-texto: #ffffff;
-  --foco: #1a56db;
+  --boton-desde: #7c3aed;
+  --boton-hasta: #2563eb;
+  --boton-texto: #ffffff;
+  --foco: #2563eb;
+  --cifra-desde: #14112b;
+  --cifra-hasta: #4c1d95;
 
-  --barato: #1e8e4e;  --barato-fondo: #dcf3e5;  --barato-texto: #0b4d26;
-  --normal: #c98a00;  --normal-fondo: #fff1c7;  --normal-texto: #5c3f00;
-  --caro:   #d23f3f;  --caro-fondo:   #fde2e2;  --caro-texto:   #861b1b;
+  --luz: #f59e0b;  --luz-tinte: rgb(245 158 11 / 0.14);  --luz-borde: rgb(217 119 6 / 0.35);  --luz-texto: #7a4100;  --sobre-luz: #2a1800;
+  --gas: #0284c7;  --gas-tinte: rgb(14 165 233 / 0.12);  --gas-borde: rgb(2 132 199 / 0.32);  --gas-texto: #075985;  --sobre-gas: #ffffff;
+  --violeta: #7c3aed; --violeta-tinte: rgb(124 58 237 / 0.10); --violeta-borde: rgb(124 58 237 / 0.30); --sobre-violeta: #ffffff;
 
-  --radio: 14px;
-  --sombra: 0 1px 3px rgb(0 0 0 / 0.08);
+  --barato: #16a34a;  --barato-fondo: #dcfce7;  --barato-texto: #14532d;
+  --normal: #d97706;  --normal-fondo: #fef3c7;  --normal-texto: #78350f;
+  --caro:   #e11d48;  --caro-fondo:   #ffe4e6;  --caro-texto:   #881337;
+
+  --filtro-mapa: none;
   color-scheme: light;
 }
 
-/* Modo oscuro automático (si el móvil está en oscuro y el usuario no eligió otra cosa) */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --fondo: #101214; --superficie: #1b1e22; --texto: #f1f3f5; --texto-suave: #b6bcc4;
-    --borde: #33383f; --primario: #3ecf8e; --primario-texto: #06281a; --foco: #8ab4ff;
-    --barato: #3ecf8e; --barato-fondo: #12392a; --barato-texto: #a8f0cb;
-    --normal: #f2b632; --normal-fondo: #3d2f0b; --normal-texto: #ffe2a0;
-    --caro:   #ff6b6b; --caro-fondo:   #451a1a; --caro-texto:   #ffc2c2;
-    --sombra: none; color-scheme: dark;
-  }
-}
-/* Modo oscuro elegido a mano con el botón */
-:root[data-theme="dark"] {
-  --fondo: #101214; --superficie: #1b1e22; --texto: #f1f3f5; --texto-suave: #b6bcc4;
-  --borde: #33383f; --primario: #3ecf8e; --primario-texto: #06281a; --foco: #8ab4ff;
-  --barato: #3ecf8e; --barato-fondo: #12392a; --barato-texto: #a8f0cb;
-  --normal: #f2b632; --normal-fondo: #3d2f0b; --normal-texto: #ffe2a0;
-  --caro:   #ff6b6b; --caro-fondo:   #451a1a; --caro-texto:   #ffc2c2;
-  --sombra: none; color-scheme: dark;
-}
-
+/* ---- Base ---- */
 * { box-sizing: border-box; }
+[hidden] { display: none !important; } /* que "oculto" gane siempre a los estilos de botón o tarjeta */
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
-  font: 1.125rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* 18 px */
+  min-height: 100vh;
+  font: 400 1.0625rem/1.55 "Sora", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* 17 px: Sora es ancha */
   background: var(--fondo);
   color: var(--texto);
-  /* deja sitio para la barra de pestañas fija de abajo */
-  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  padding-bottom: calc(var(--alto-pestanas) + 24px + env(safe-area-inset-bottom));
 }
-h1 { font-size: 1.6rem; line-height: 1.2; margin: 0.5rem 0 1rem; }
-h2 { font-size: 1.3rem; margin: 1.75rem 0 0.5rem; }
-h3 { font-size: 1.15rem; margin: 0 0 0.25rem; }
-p { margin: 0.4rem 0; }
-a { color: var(--primario); }
 
-/* Contorno muy visible al navegar con teclado */
-:focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
+/* La aurora: tres manchas de color difuminadas detrás de todo */
+body::before {
+  content: ""; position: fixed; inset: -20vmax; z-index: -1; pointer-events: none;
+  opacity: var(--aurora-opacidad);
+  background:
+    radial-gradient(38vmax 30vmax at 18% 12%, var(--aurora-1), transparent 70%),
+    radial-gradient(34vmax 28vmax at 85% 30%, var(--aurora-2), transparent 70%),
+    radial-gradient(40vmax 30vmax at 50% 95%, var(--aurora-3), transparent 70%);
+  filter: blur(40px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  body::before { animation: aurora 26s ease-in-out infinite alternate; }
+  @keyframes aurora {
+    0%   { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+    50%  { transform: translate3d(4vmax, -3vmax, 0) rotate(8deg) scale(1.08); }
+    100% { transform: translate3d(-3vmax, 2vmax, 0) rotate(-6deg) scale(1.04); }
+  }
+}
+
+h1 { font-size: 1.85rem; line-height: 1.12; font-weight: 700; letter-spacing: -0.03em; margin: 8px 0 4px; }
+h2 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; margin: 30px 0 10px; }
+h3 { font-size: 1.0625rem; font-weight: 600; margin: 0 0 4px; }
+p { margin: 6px 0; }
+a { color: var(--primario); font-weight: 600; }
+strong { font-weight: 700; }
+
+:focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; border-radius: 8px; }
 #principal:focus { outline: none; }
-
 .saltar { position: absolute; left: -999px; }
-.saltar:focus { left: 8px; top: 8px; z-index: 10; background: var(--superficie); padding: 8px; }
+.saltar:focus { left: 8px; top: 8px; z-index: 30; background: var(--cristal-fuerte); padding: 8px; }
 
-/* ---- Cabecera y contenido ---- */
-.cabecera {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 16px; padding-top: calc(10px + env(safe-area-inset-top));
-  background: var(--superficie); border-bottom: 1px solid var(--borde);
+/* Iconos SVG (todos del mismo juego, ver index.html) */
+.icono { width: 1.25em; height: 1.25em; flex: none; vertical-align: -0.25em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- Cristal: la superficie de todo (cabecera, pestañas, tarjetas) ---- */
+.cristal, .cabecera, .pestanas, .tarjeta, .fila-franja, .gasolinera, .segmento, dialog, .aviso-cookies {
+  background: var(--cristal);
+  border: 1px solid var(--cristal-borde);
+  box-shadow: var(--cristal-brillo), var(--sombra);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
 }
-.logo { font-weight: 800; font-size: 1.3rem; margin: 0; }
-main { max-width: 640px; margin: 0 auto; padding: 8px 16px 24px; }
+/* Navegadores sin desenfoque, o personas que piden menos transparencia: cristal opaco */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .cabecera, .pestanas, .tarjeta, .fila-franja, .gasolinera, .segmento, dialog, .aviso-cookies { background: var(--cristal-fuerte); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .cabecera, .pestanas, .tarjeta, .fila-franja, .gasolinera, .segmento, dialog, .aviso-cookies { background: var(--cristal-fuerte); }
+  body::before { opacity: 0.25; }
+}
+
+/* ---- Cabecera ---- */
+.cabecera {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 12px;
+  margin: 0; border-width: 0 0 1px; border-radius: 0; box-shadow: var(--cristal-brillo);
+  padding: 10px 16px; padding-top: calc(10px + env(safe-area-inset-top));
+  background: var(--cristal-fuerte);
+}
+/* En el móvil la cabecera NO lleva desenfoque: si lo llevara, la barra de pestañas
+   (que está dentro) dejaría de poder fijarse abajo de la pantalla. */
+@media (max-width: 899px) {
+  .cabecera { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--fondo); }
+}
+.logo { display: flex; align-items: center; gap: 10px; margin: 0; font-weight: 700; font-size: 1.3rem; letter-spacing: -0.03em; color: var(--texto); text-decoration: none; }
+.logo-marca {
+  display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+  border-radius: 13px; color: #ffe066;
+  background: linear-gradient(135deg, var(--boton-desde), var(--boton-hasta));
+  box-shadow: 0 0 18px rgb(124 58 237 / 0.55);
+}
+.logo-marca .icono { width: 22px; height: 22px; fill: currentColor; stroke: none; filter: drop-shadow(0 0 4px rgb(255 224 102 / 0.8)); }
+.boton-icono {
+  margin-left: auto; width: 48px; height: 48px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--cristal-borde); background: var(--relleno); color: var(--texto); cursor: pointer; font: inherit;
+}
+.boton-icono:hover { background: var(--relleno-fuerte); }
+
+/* ---- Pestañas: píldora de cristal flotante abajo (móvil) ---- */
+.pestanas {
+  position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 10;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+  padding: 6px; border-radius: 28px; background: var(--cristal-fuerte);
+}
+.pestanas a {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-height: 60px; border-radius: 22px; font-size: 0.82rem; font-weight: 600; color: var(--texto-suave); text-decoration: none;
+}
+.pestanas a .icono { width: 24px; height: 24px; }
+.pestanas a[aria-current="page"] {
+  color: var(--boton-texto);
+  background: linear-gradient(135deg, var(--boton-desde), var(--boton-hasta));
+  box-shadow: 0 0 20px rgb(124 58 237 / 0.5);
+}
+
+/* Pantallas grandes: pestañas dentro de la cabecera */
+@media (min-width: 900px) {
+  body { padding-bottom: 40px; }
+  .cabecera { padding-left: max(16px, calc((100% - 1040px) / 2)); padding-right: max(16px, calc((100% - 1040px) / 2)); }
+  .pestanas {
+    position: static; display: flex; gap: 4px; margin: 0 auto; padding: 4px; border-radius: 999px;
+    background: var(--relleno); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  .pestanas a { flex-direction: row; gap: 8px; min-height: 46px; padding: 0 18px; font-size: 0.95rem; border-radius: 999px; }
+  .pestanas a .icono { width: 20px; height: 20px; }
+  .boton-icono { margin-left: 0; }
+}
+
+main { max-width: 680px; margin: 0 auto; padding: 16px 16px 24px; }
+.subtitulo { color: var(--texto-suave); margin: 0 0 18px; }
 
 /* ---- Tarjetas ---- */
-.tarjeta {
-  background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio);
-  padding: 16px; margin: 12px 0; box-shadow: var(--sombra);
-}
-.resumen h2 { margin-top: 0; }
-.grande { font-size: 1.25rem; }
-.nota { color: var(--texto-suave); font-size: 1rem; }
-.fecha { color: var(--texto-suave); margin-top: 0; }
-.ya { background: var(--barato-fondo); color: var(--barato-texto); }
-.ejemplos { font-weight: normal; color: var(--texto-suave); font-size: 1rem; }
-.aviso-info { border-left: 6px solid var(--normal); }
-.aviso-error { border-left: 6px solid var(--caro); }
-.aviso-offline { color: var(--normal-texto); background: var(--normal-fondo); padding: 8px 12px; border-radius: 8px; }
+.tarjeta { border-radius: var(--radio); padding: 20px; margin: 14px 0; }
+.tarjeta-luz { background: linear-gradient(140deg, var(--luz-tinte), var(--cristal) 60%); border-color: var(--luz-borde); }
+.tarjeta-gas { background: linear-gradient(140deg, var(--gas-tinte), var(--cristal) 60%); border-color: var(--gas-borde); }
+.tarjeta-primaria { background: linear-gradient(140deg, var(--violeta-tinte), var(--cristal) 60%); border-color: var(--violeta-borde); }
+.cabeza-tarjeta { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; font-weight: 600; letter-spacing: 0.01em; }
+.insignia { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 14px; flex: none; }
+.insignia-luz { background: var(--luz); color: var(--sobre-luz); box-shadow: 0 0 22px rgb(251 191 36 / 0.45); }
+.insignia-gas { background: var(--gas); color: var(--sobre-gas); box-shadow: 0 0 22px rgb(56 189 248 / 0.45); }
+.insignia-primaria { background: var(--violeta); color: var(--sobre-violeta); box-shadow: 0 0 22px rgb(167 139 250 / 0.45); }
+.tarjeta-luz .cabeza-tarjeta { color: var(--luz-texto); }
+.tarjeta-gas .cabeza-tarjeta { color: var(--gas-texto); }
 
-/* ---- Botones (mínimo 48 px de alto, fáciles de pulsar) ---- */
-.boton, .boton-pequeno, .boton-dia {
-  font: inherit; cursor: pointer; border-radius: 12px; text-decoration: none;
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+/* Cifras grandes con degradado (el texto sigue siendo claro sobre oscuro, y oscuro sobre claro) */
+.dato-grande {
+  font-size: 2.6rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1.05; margin: 4px 0 6px;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(90deg, var(--cifra-desde), var(--cifra-hasta));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.dato-unidad { font-size: 1rem; font-weight: 600; letter-spacing: 0; color: var(--texto-suave); -webkit-text-fill-color: var(--texto-suave); }
+.grande { font-size: 1.15rem; }
+.nota { color: var(--texto-suave); font-size: 0.95rem; }
+.fecha { color: var(--texto-suave); margin: 0 0 4px; }
+.ejemplos { font-weight: 400; color: var(--texto-suave); font-size: 0.95rem; }
+.aviso-info { border-color: var(--luz-borde); }
+.aviso-error { border-color: var(--caro); }
+.aviso-offline { color: var(--normal-texto); background: var(--normal-fondo); padding: 8px 12px; border-radius: var(--radio-pequeno); }
+
+.enlace-flecha {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 48px; margin-top: 4px;
+  font-weight: 600; text-decoration: none; color: var(--texto);
+}
+.enlace-flecha .icono { color: var(--primario); transition: transform 0.2s; }
+.enlace-flecha:hover .icono { transform: translateX(4px); }
+
+/* ---- Botones (mínimo 48 px de alto) ---- */
+.boton, .boton-pequeno, .segmento button {
+  font: inherit; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
 }
 .boton {
-  min-height: 52px; padding: 10px 18px; margin-top: 10px; width: 100%;
-  background: var(--primario); color: var(--primario-texto); border: 2px solid var(--primario); font-weight: 700;
+  min-height: 56px; padding: 10px 22px; margin-top: 14px; width: 100%; border-radius: 18px; font-weight: 700;
+  color: var(--boton-texto); border: 1px solid rgb(255 255 255 / 0.25);
+  background: linear-gradient(135deg, var(--boton-desde), var(--boton-hasta));
+  box-shadow: 0 8px 28px rgb(91 33 182 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.25);
 }
-.boton.secundario { background: transparent; color: var(--primario); }
+.boton:hover { filter: brightness(1.1); }
+.boton.secundario { color: var(--texto); background: var(--relleno); border-color: var(--cristal-borde); box-shadow: var(--cristal-brillo); }
+.boton.secundario:hover { background: var(--relleno-fuerte); filter: none; }
 .boton-pequeno {
-  min-height: 44px; padding: 6px 14px; background: transparent; color: var(--texto);
-  border: 2px solid var(--borde);
+  min-height: 48px; padding: 6px 16px; border-radius: 999px; background: var(--relleno); color: var(--texto);
+  border: 1px solid var(--cristal-borde); font-weight: 600;
+}
+.boton-pequeno:hover { background: var(--relleno-fuerte); }
+
+/* Control segmentado (Hoy/Mañana, Más baratas/Más cercanas) */
+.segmento { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 5px; margin: 10px 0 14px; border-radius: 20px; }
+.segmento button { min-height: 48px; border-radius: 15px; border: none; background: transparent; color: var(--texto-suave); font-weight: 600; }
+.segmento button[aria-pressed="true"] {
+  color: var(--boton-texto); background: linear-gradient(135deg, var(--boton-desde), var(--boton-hasta));
+  box-shadow: 0 0 18px rgb(124 58 237 / 0.45);
 }
 
-/* ---- Selector Hoy / Mañana ---- */
-.selector-dia { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-.boton-dia {
-  min-height: 52px; background: var(--superficie); color: var(--texto);
-  border: 2px solid var(--borde); font-weight: 700;
-}
-.boton-dia[aria-pressed="true"] { background: var(--primario); color: var(--primario-texto); border-color: var(--primario); }
+/* ---- Pastillas de nivel ---- */
+.pastilla { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 999px; font-weight: 700; font-size: 0.95rem; white-space: nowrap; border: 1px solid transparent; }
+.pastilla.nivel-barato { background: var(--barato-fondo); color: var(--barato-texto); border-color: rgb(74 222 128 / 0.35); }
+.pastilla.nivel-normal { background: var(--normal-fondo); color: var(--normal-texto); border-color: rgb(251 191 36 / 0.35); }
+.pastilla.nivel-caro   { background: var(--caro-fondo);   color: var(--caro-texto);   border-color: rgb(251 113 133 / 0.4); }
+.pastilla.ya { background: var(--verde-solido); color: #fff; box-shadow: 0 0 16px rgb(74 222 128 / 0.5); }
+.leyenda { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 8px; }
 
-/* ---- Tarjeta "Ahora mismo" ---- */
-.ahora { border-left-width: 8px; }
-.ahora.nivel-barato { border-left-color: var(--barato); }
-.ahora.nivel-normal { border-left-color: var(--normal); }
-.ahora.nivel-caro   { border-left-color: var(--caro); }
-.etiqueta { margin: 0; color: var(--texto-suave); }
-.precio-grande { font-size: 2.2rem; font-weight: 800; margin: 0; }
-.nivel { font-weight: 700; margin: 0; }
+/* ---- Luz: tarjeta "Ahora" con una barra de color brillante a la izquierda ---- */
+.ahora { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; position: relative; overflow: hidden; }
+.ahora::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; }
+.ahora.nivel-barato::before { background: var(--barato); box-shadow: 0 0 18px var(--barato); }
+.ahora.nivel-normal::before { background: var(--normal); box-shadow: 0 0 18px var(--normal); }
+.ahora.nivel-caro::before   { background: var(--caro);   box-shadow: 0 0 18px var(--caro); }
+.etiqueta { margin: 0; color: var(--texto-suave); font-weight: 500; }
 
-/* ---- Recomendaciones ---- */
+/* ---- Luz: recomendación principal y secundarias ---- */
+.franja-principal .dato-grande { font-size: 2.2rem; }
+.ahorro-linea { font-weight: 500; }
 .lista-franjas { list-style: none; padding: 0; margin: 0; }
+.fila-franja { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 12px; padding: 14px 16px; margin: 10px 0; border-radius: 20px; }
+.fila-franja .boton-icono { margin: 0; }
+.fila-franja strong { font-size: 1.1rem; }
 
-/* ---- Pastillas de color (barato / normal / caro) ---- */
-.pastilla { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: 1rem; }
-.pastilla.nivel-barato { background: var(--barato-fondo); color: var(--barato-texto); }
-.pastilla.nivel-normal { background: var(--normal-fondo); color: var(--normal-texto); }
-.pastilla.nivel-caro   { background: var(--caro-fondo);   color: var(--caro-texto); }
-.leyenda { display: flex; gap: 8px; flex-wrap: wrap; }
-
-/* ---- Gráfico de barras horizontal: una fila por hora ---- */
-.grafico { list-style: none; padding: 0; margin: 8px 0; }
-.fila {
-  display: grid; grid-template-columns: 3.4rem 1fr 5.2rem; align-items: center; gap: 8px;
-  padding: 5px 6px; border-radius: 8px;
+/* ---- Luz: gráfico de barras verticales brillantes ---- */
+.grafico-barras {
+  display: grid; grid-template-columns: repeat(var(--n, 24), 1fr); align-items: end; gap: 3px;
+  height: 170px; padding: 10px 0 0; border-bottom: 1px solid var(--borde);
 }
+.barra { border-radius: 6px 6px 2px 2px; min-height: 8px; }
+.barra.nivel-barato { background: linear-gradient(to top, rgb(74 222 128 / 0.35), var(--barato)); box-shadow: 0 0 10px rgb(74 222 128 / 0.35); }
+.barra.nivel-normal { background: linear-gradient(to top, rgb(251 191 36 / 0.35), var(--normal)); box-shadow: 0 0 10px rgb(251 191 36 / 0.3); }
+.barra.nivel-caro   { background: linear-gradient(to top, rgb(251 113 133 / 0.35), var(--caro));   box-shadow: 0 0 10px rgb(251 113 133 / 0.35); }
+.barra.es-ahora { outline: 2px solid var(--texto); outline-offset: 2px; }
+.eje-horas { display: grid; grid-template-columns: repeat(var(--n, 24), 1fr); gap: 3px; font-size: 0.8rem; color: var(--texto-suave); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.eje-horas span { white-space: nowrap; overflow: visible; }
+
+/* Lista detallada (desplegable) */
+details.desplegable { margin: 12px 0; }
+details.desplegable > summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  min-height: 54px; padding: 0 18px; border-radius: 18px; background: var(--relleno); border: 1px solid var(--cristal-borde); font-weight: 600;
+}
+details.desplegable > summary::-webkit-details-marker { display: none; }
+details.desplegable[open] > summary .icono { transform: rotate(180deg); }
+.grafico { list-style: none; padding: 0; margin: 8px 0; }
+.fila { display: grid; grid-template-columns: 3.6rem 1fr 5.4rem; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 12px; }
 .g-hora { font-variant-numeric: tabular-nums; font-weight: 600; }
-.g-barra { height: 22px; background: var(--borde); border-radius: 6px; }
+.g-barra { height: 18px; background: var(--relleno); border-radius: 6px; }
 .g-barra > span { display: block; height: 100%; border-radius: 6px; }
-.g-precio { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.g-precio { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
 .fila.nivel-barato .g-barra > span { background: var(--barato); }
 .fila.nivel-normal .g-barra > span { background: var(--normal); }
 .fila.nivel-caro   .g-barra > span { background: var(--caro); }
 .fila.nivel-barato .g-precio { color: var(--barato-texto); }
 .fila.nivel-normal .g-precio { color: var(--normal-texto); }
 .fila.nivel-caro   .g-precio { color: var(--caro-texto); }
-.fila.es-ahora { outline: 3px solid var(--texto); background: var(--superficie); }
+:root[data-theme="light"] .fila.nivel-barato .g-precio { color: var(--barato-texto); }
+.fila.es-ahora { outline: 2px solid var(--primario); background: var(--relleno); }
+
+/* ---- Gasolina: barra de búsqueda compacta ---- */
+.barra-busqueda { display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; }
+.barra-busqueda p { margin: 0; flex: 1; line-height: 1.3; }
+.barra-busqueda .boton-pequeno { flex: none; }
 
 /* ---- Gasolina: formulario ---- */
 fieldset { border: none; padding: 0; margin: 0; }
-legend, .etiqueta-campo { font-weight: 700; display: block; margin: 0 0 6px; }
-.etiqueta-campo { margin-top: 16px; }
+legend, .etiqueta-campo { font-weight: 600; display: block; margin: 0 0 10px; }
+.etiqueta-campo { margin-top: 20px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip input { position: absolute; opacity: 0; pointer-events: none; }
 .chip span {
-  display: inline-flex; align-items: center; min-height: 48px; padding: 6px 14px; cursor: pointer;
-  border: 2px solid var(--borde); border-radius: 999px; background: var(--superficie); font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px; min-height: 48px; padding: 6px 16px; cursor: pointer;
+  border: 1px solid var(--cristal-borde); border-radius: 999px; background: var(--relleno); font-weight: 600;
 }
-.chip input:checked + span { background: var(--primario); color: var(--primario-texto); border-color: var(--primario); }
-.chip input:checked + span::before { content: "✓ "; white-space: pre; }
+.chip input:checked + span { background: var(--gas); color: var(--sobre-gas); border-color: var(--gas); box-shadow: 0 0 18px rgb(56 189 248 / 0.45); }
 .chip input:focus-visible + span { outline: 3px solid var(--foco); outline-offset: 2px; }
 input[type="number"], input[type="search"] {
-  font: inherit; min-height: 52px; padding: 8px 12px; border-radius: 12px;
-  border: 2px solid var(--borde); background: var(--superficie); color: var(--texto); width: 100%;
+  font: inherit; font-weight: 600; min-height: 56px; padding: 8px 16px; border-radius: 16px;
+  border: 1px solid var(--cristal-borde); background: var(--relleno); color: var(--texto); width: 100%;
 }
-.fila-litros { display: grid; grid-template-columns: 1fr auto auto auto; gap: 8px; }
-.fila-litros input { width: 100%; }
+input::placeholder { color: var(--texto-suave); opacity: 1; }
+input:focus-visible { outline: 3px solid var(--foco); outline-offset: 1px; }
+.paso-litros { display: grid; grid-template-columns: 56px 1fr 56px; gap: 8px; align-items: center; max-width: 320px; }
+.paso-litros button {
+  width: 56px; height: 56px; border-radius: 16px; border: 1px solid var(--cristal-borde); background: var(--relleno);
+  color: var(--texto); cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.paso-litros button:hover { background: var(--relleno-fuerte); }
+.paso-litros .campo-litros { position: relative; }
+.paso-litros input { text-align: center; font-size: 1.3rem; font-weight: 700; padding-right: 34px; -moz-appearance: textfield; }
+.paso-litros input::-webkit-outer-spin-button, .paso-litros input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.paso-litros .sufijo { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--texto-suave); font-weight: 600; pointer-events: none; }
 .fila-busqueda { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
-.boton-buscar { margin-top: 0; width: auto; }
-.separador { display: flex; align-items: center; gap: 10px; color: var(--texto-suave); margin: 14px 0 0; }
+.boton-buscar { margin-top: 0; width: 56px; padding: 0; }
+.separador { display: flex; align-items: center; gap: 10px; color: var(--texto-suave); margin: 18px 0 0; }
 .separador::before, .separador::after { content: ""; flex: 1; border-top: 1px solid var(--borde); }
+.privacidad-nota { display: flex; gap: 8px; align-items: flex-start; }
 
 /* ---- Gasolina: resultados ---- */
-.resumen-zona { border-left: 8px solid var(--barato); }
-.mapa { height: 320px; border-radius: var(--radio); border: 1px solid var(--borde); margin: 12px 0; z-index: 0; }
+.mapa { height: 300px; border-radius: var(--radio); border: 1px solid var(--cristal-borde); margin: 12px 0; z-index: 0; overflow: hidden; box-shadow: var(--sombra); }
+.mapa .leaflet-tile-pane { filter: var(--filtro-mapa); }
+.mapa.leaflet-container { background: var(--fondo); font-family: inherit; }
 .lista-gasolineras { list-style: none; padding: 0; margin: 0; }
-.gasolinera { scroll-margin: 80px; transition: box-shadow 0.3s; }
-.gasolinera.resaltada { box-shadow: 0 0 0 4px var(--foco); }
-.g-cabecera { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
-.g-cabecera h3 { margin: 0; overflow-wrap: anywhere; }
+.gasolinera {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: start;
+  padding: 16px; margin: 10px 0; border-radius: 22px; scroll-margin: 90px; transition: box-shadow 0.3s;
+}
+.gasolinera.resaltada { box-shadow: 0 0 0 3px var(--foco), 0 0 30px rgb(34 211 238 / 0.4); }
+.gasolinera.es-mejor { border-color: rgb(74 222 128 / 0.5); background: linear-gradient(140deg, var(--barato-fondo), var(--cristal) 55%); }
+.gasolinera h3 { margin: 4px 0 0; overflow-wrap: anywhere; }
+.gasolinera .detalle { grid-column: 2 / 4; margin: 0; color: var(--texto-suave); font-size: 0.95rem; }
+.gasolinera .acciones { grid-column: 2 / 4; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
 .puesto {
   display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
-  border-radius: 50%; background: var(--texto); color: var(--fondo); font-weight: 800;
+  border-radius: 50%; background: var(--relleno-fuerte); color: var(--texto); font-weight: 700;
 }
-.precio-g { font-size: 1.35rem; font-weight: 800; margin: 0; white-space: nowrap; }
-.ahorro { font-weight: 600; }
-.ahorro.positivo { color: var(--barato-texto); background: var(--barato-fondo); padding: 4px 10px; border-radius: 8px; }
-.ahorro.negativo { color: var(--caro-texto); }
+.gasolinera.es-mejor .puesto { background: var(--verde-solido); color: #fff; box-shadow: 0 0 16px rgb(74 222 128 / 0.6); }
+.precio-g { font-size: 1.3rem; font-weight: 700; margin: 2px 0 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ahorro { font-weight: 600; font-size: 0.95rem; margin: 0; padding: 5px 12px; border-radius: 999px; display: inline-block; }
+.ahorro.positivo { color: var(--barato-texto); background: var(--barato-fondo); border: 1px solid rgb(74 222 128 / 0.35); }
+.ahorro.negativo { color: var(--caro-texto); background: var(--caro-fondo); border: 1px solid rgb(251 113 133 / 0.35); }
+.ahorro.igual { color: var(--texto-suave); background: var(--relleno); }
+.como-llegar { margin-left: auto; }
+.como-llegar.boton-pequeno { color: var(--gas-texto); border-color: var(--gas-borde); }
 
-/* Marcadores del mapa: círculo con el número del puesto */
+/* Marcadores del mapa: círculos brillantes con el número del puesto */
 .marcador span {
-  display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%;
-  background: #15171a; color: #fff; font: 800 15px/1 system-ui, sans-serif; border: 3px solid #fff;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
+  display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%;
+  background: #1e1b4b; color: #fff; font: 700 13px/1 "Sora", system-ui, sans-serif; border: 2px solid #67e8f9;
+  box-shadow: 0 0 12px rgb(103 232 249 / 0.6);
 }
-.marcador-mejor span { background: #1e8e4e; width: 40px; height: 40px; margin: -3px; font-size: 17px; }
+.marcador-mejor span { background: #15803d; width: 46px; height: 46px; font-size: 17px; margin: -7px; border: 3px solid #bbf7d0; box-shadow: 0 0 22px rgb(74 222 128 / 0.9); }
 
-/* ---- Inicio: enlace a "Paga menos" ---- */
-.enlace-tarjeta { display: flex; gap: 12px; align-items: center; color: var(--texto); text-decoration: none; }
-.enlace-tarjeta > span:first-child { font-size: 2rem; }
+/* ---- Esqueletos de carga ---- */
+.esqueleto { display: block; border-radius: 12px; background: var(--relleno); position: relative; overflow: hidden; }
+.esqueleto + .esqueleto { margin-top: 10px; }
+@media (prefers-reduced-motion: no-preference) {
+  .esqueleto::after {
+    content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(167 139 250 / 0.25), rgb(34 211 238 / 0.25), transparent);
+    animation: brillo 1.6s infinite;
+  }
+  @keyframes brillo { to { transform: translateX(100%); } }
+}
+
+/* ---- Inicio: tarjeta de "Paga menos" ---- */
+.enlace-tarjeta { display: flex; gap: 14px; align-items: center; color: var(--texto); text-decoration: none; font-weight: 400; }
+.enlace-tarjeta .flecha { margin-left: auto; color: var(--primario); }
+
+/* ---- Paga menos ---- */
+.lista-ofertas { list-style: none; padding: 0; margin: 0; }
+.oferta { border-color: var(--luz-borde); }
+.lista-consejos { padding-left: 22px; margin: 6px 0 0; }
+.lista-consejos li { margin: 8px 0; }
 
 /* ---- Publicidad: siempre señalada y separada del contenido ---- */
 .hueco-anuncio { margin: 28px 0 12px; padding-top: 8px; border-top: 1px dashed var(--borde); }
-.etiqueta-publicidad {
-  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
-  color: var(--texto-suave); margin: 0 0 6px;
-}
+.etiqueta-publicidad { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--texto-suave); margin: 0 0 6px; }
 .anuncio-demo {
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-  min-height: 100px; border: 2px dashed var(--borde); border-radius: var(--radio); color: var(--texto-suave);
+  min-height: 100px; border: 1px dashed var(--cristal-borde); border-radius: var(--radio); color: var(--texto-suave); background: var(--relleno);
 }
-.lista-ofertas { list-style: none; padding: 0; margin: 0; }
-.oferta { border-left: 6px solid var(--normal); }
-.lista-consejos { padding-left: 36px; }
-.lista-consejos li { margin: 6px 0; }
 
-/* ---- Aviso de cookies: encima de la barra de pestañas ---- */
+/* ---- Aviso de cookies: encima de las pestañas ---- */
 .aviso-cookies {
-  position: fixed; left: 0; right: 0; z-index: 20;
-  bottom: calc(68px + env(safe-area-inset-bottom));
-  max-height: 70vh; overflow-y: auto;
-  background: var(--superficie); color: var(--texto); border-top: 3px solid var(--primario);
-  padding: 16px; box-shadow: 0 -4px 16px rgb(0 0 0 / 0.2);
+  position: fixed; left: 12px; right: 12px; z-index: 20;
+  bottom: calc(var(--alto-pestanas) + 18px + env(safe-area-inset-bottom));
+  max-height: 65vh; overflow-y: auto; padding: 18px; border-radius: var(--radio);
+  background: var(--cristal-fuerte);
 }
+.aviso-cookies > * { max-width: 640px; margin-left: auto; margin-right: auto; }
 .aviso-cookies h2 { margin-top: 0; }
 .aviso-cookies-botones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .aviso-cookies-botones .boton { margin-top: 4px; }
-/* Mismo aspecto para Aceptar y Rechazar: rechazar debe ser igual de fácil */
 body.con-aviso-cookies { padding-bottom: 60vh; }
+@media (min-width: 900px) { .aviso-cookies { bottom: 16px; max-width: 720px; margin: 0 auto; } }
 
 /* ---- Pie ---- */
-.pie { margin-top: 32px; padding-top: 12px; border-top: 1px solid var(--borde); font-size: 0.95rem; color: var(--texto-suave); }
-
-/* ---- Barra de pestañas inferior ---- */
-.pestanas {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  background: var(--superficie); border-top: 1px solid var(--borde);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.pestanas a {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  min-height: 68px; font-size: 0.95rem; font-weight: 600; color: var(--texto-suave); text-decoration: none;
-}
-.pestanas a span { font-size: 1.5rem; line-height: 1.1; }
-.pestanas a[aria-current="page"] { color: var(--primario); box-shadow: inset 0 4px 0 var(--primario); }
+.pie { margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--borde); font-size: 0.9rem; color: var(--texto-suave); }
 
 /* ---- Ventana de aviso ---- */
-dialog {
-  border: none; border-radius: var(--radio); padding: 20px; width: min(92vw, 440px);
-  background: var(--superficie); color: var(--texto);
-}
-dialog::backdrop { background: rgb(0 0 0 / 0.5); }
-dialog h2 { margin-top: 0; }
+dialog { border-radius: var(--radio); padding: 22px; width: min(92vw, 440px); color: var(--texto); background: var(--cristal-fuerte); }
+dialog::backdrop { background: rgb(8 6 26 / 0.6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+dialog h2 { margin-top: 0; display: flex; align-items: center; gap: 8px; }
 dialog .boton-pequeno { margin-top: 12px; width: 100%; }
 
+/* Leaflet: ventanitas del mapa con el mismo estilo */
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--cristal-fuerte) !important; color: var(--texto) !important; }
+.leaflet-control-attribution { background: var(--cristal-fuerte) !important; color: var(--texto-suave) !important; }
+.leaflet-control-attribution a { color: var(--primario) !important; }
+.leaflet-bar a { background: var(--cristal-fuerte) !important; color: var(--texto) !important; border-color: var(--cristal-borde) !important; }
+
 @media (prefers-reduced-motion: no-preference) {
-  .boton, .boton-dia { transition: transform 0.1s; }
-  .boton:active, .boton-dia:active { transform: scale(0.98); }
+  .boton, .segmento button, .boton-icono, .pestanas a { transition: transform 0.12s, filter 0.15s, background-color 0.15s; }
+  .boton:active, .segmento button:active, .boton-icono:active, .pestanas a:active { transform: scale(0.96); }
+  .tarjeta, .gasolinera, .fila-franja { animation: aparecer 0.45s ease-out both; }
+  @keyframes aparecer { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 }

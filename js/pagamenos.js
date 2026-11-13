@@ -7,7 +7,7 @@
 // "Publicidad", con rel="sponsored" (así lo piden Google y la ley).
 // =====================================================================
 import { CONFIG } from './config.js';
-import { escapar } from './formato.js';
+import { escapar, icono } from './formato.js';
 
 /** Solo ofertas completas y con enlace seguro (https). Función pura → se prueba. */
 export function ofertasValidas(lista) {
@@ -31,33 +31,36 @@ export function pintarPagaMenos(contenedor, config = CONFIG) {
   const luz = plantillaOfertas(config.ofertas?.luz);
   const seguros = plantillaOfertas(config.ofertas?.seguros);
   contenedor.innerHTML = `
-    <p>Ideas y ofertas para pagar menos en casa y en el coche.</p>
+    <p class="subtitulo">Ideas y ofertas para pagar menos en casa y en el coche.</p>
 
-    <h2>💡 Tarifa de la luz</h2>
-    <div class="tarjeta">
-      <h3>¿Te conviene el PVPC o una tarifa fija?</h3>
+    <h2>Tarifa de la luz</h2>
+    <div class="tarjeta tarjeta-luz">
+      <p class="cabeza-tarjeta"><span class="insignia insignia-luz">${icono('rayo')}</span> ¿PVPC o precio fijo?</p>
       <p>Con el <strong>PVPC</strong> (el precio por horas de esta app) se ahorra si puedes poner los aparatos
          en las horas baratas. Si no puedes cambiar tus horarios, una <strong>tarifa de precio fijo</strong> puede salir mejor.</p>
       <p>El comparador <strong>oficial y gratuito</strong> de la CNMC compara todas las ofertas con tu consumo real.</p>
-      <a class="boton secundario" href="https://comparador.cnmc.gob.es/" target="_blank" rel="noopener">Abrir el comparador de la CNMC</a>
+      <a class="boton secundario" href="https://comparador.cnmc.gob.es/" target="_blank" rel="noopener">Abrir el comparador de la CNMC ${icono('flecha')}</a>
     </div>
     ${luz ? `<ul class="lista-ofertas">${luz}</ul>` : ''}
 
-    <h2>🚗 Seguro del coche</h2>
-    <div class="tarjeta">
-      <h3>Compara antes de renovar</h3>
+    <h2>Seguro del coche</h2>
+    <div class="tarjeta tarjeta-gas">
+      <p class="cabeza-tarjeta"><span class="insignia insignia-gas">${icono('coche')}</span> Compara antes de renovar</p>
       <p>Las aseguradoras suelen subir el precio en cada renovación. Pide precio a otras compañías
          <strong>un mes antes</strong> del vencimiento: puedes cambiarte avisando con un mes de antelación.</p>
     </div>
     ${seguros ? `<ul class="lista-ofertas">${seguros}</ul>` : ''}
 
-    <h2>⛽ Trucos para gastar menos combustible</h2>
-    <ul class="tarjeta lista-consejos">
-      <li>Revisa la presión de las ruedas cada mes: con poca presión se gasta más.</li>
-      <li>Conduce suave y en marchas largas; a 100 km/h se gasta bastante menos que a 120.</li>
-      <li>Quita el peso y la baca que no uses.</li>
-      <li>Usa la pestaña <a href="#gasolina">Gasolina</a> antes de repostar.</li>
-    </ul>
+    <h2>Gastar menos combustible</h2>
+    <div class="tarjeta">
+      <p class="cabeza-tarjeta"><span class="insignia insignia-primaria">${icono('bombilla')}</span> Cuatro trucos sencillos</p>
+      <ul class="lista-consejos">
+        <li>Revisa la presión de las ruedas cada mes: con poca presión se gasta más.</li>
+        <li>Conduce suave y en marchas largas; a 100 km/h se gasta bastante menos que a 120.</li>
+        <li>Quita el peso y la baca que no uses.</li>
+        <li>Mira la pestaña <a href="#gasolina">Gasolina</a> antes de repostar.</li>
+      </ul>
+    </div>
 
     ${luz || seguros ? '<p class="nota">Los enlaces marcados como «Publicidad» son de afiliado: si contratas a través de ellos, la app puede recibir una comisión sin coste para ti.</p>' : ''}
   `;

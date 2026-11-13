@@ -31,7 +31,7 @@ function cargarLeaflet() {
  *  - lista: gasolineras ya ordenadas; cada una con su número de puesto.
  *  - alPulsar(id): qué hacer al tocar una gasolinera (bajar hasta ella en la lista).
  */
-export async function pintarMapa(contenedor, { punto, lista, esUbicacion, alPulsar }) {
+export async function pintarMapa(contenedor, { punto, lista, esUbicacion, alPulsar, mejorId }) {
   let L;
   try { L = await cargarLeaflet(); } catch {
     contenedor.innerHTML = '<p class="nota">El mapa no está disponible sin conexión. La lista de abajo sí.</p>';
@@ -48,21 +48,28 @@ export async function pintarMapa(contenedor, { punto, lista, esUbicacion, alPuls
   }
   capa.clearLayers();
 
-  L.circleMarker([punto.lat, punto.lon], { radius: 9, color: '#1a56db', fillColor: '#1a56db', fillOpacity: 0.9, weight: 3 })
+  L.circleMarker([punto.lat, punto.lon], { radius: 10, color: '#ffffff', fillColor: '#2563eb', fillOpacity: 1, weight: 4 })
     .bindTooltip(esUbicacion ? 'Estás aquí' : 'Centro del municipio').addTo(capa);
 
   const limites = [[punto.lat, punto.lon]];
   lista.forEach((e, i) => {
+    const esMejor = e.id === mejorId;
     const icono = L.divIcon({
-      className: `marcador${i === 0 ? ' marcador-mejor' : ''}`,
+      className: `marcador${esMejor ? ' marcador-mejor' : ''}`,
       html: `<span>${i + 1}</span>`,
-      iconSize: [34, 34],
+      iconSize: esMejor ? [46, 46] : [32, 32],
     });
-    L.marker([e.lat, e.lon], { icon: icono, title: `${i + 1}. ${capitalizar(e.rotulo)} ${precioLitro(e.precio)}`, keyboard: false })
+    L.marker([e.lat, e.lon], {
+      icon: icono,
+      title: `${i + 1}. ${capitalizar(e.rotulo)} ${precioLitro(e.precio)}${esMejor ? ' (la más barata)' : ''}`,
+      keyboard: false,
+      zIndexOffset: esMejor ? 1000 : -i, // la más barata siempre encima de las demás
+    })
       .bindPopup(`<strong>${i + 1}. ${escapar(capitalizar(e.rotulo))}</strong><br>${escapar(precioLitro(e.precio))}`)
       .on('click', () => alPulsar?.(e.id))
       .addTo(capa);
-    if (i < 10) limites.push([e.lat, e.lon]); // encuadra las 10 primeras para no alejar demasiado
+    // Encuadra la más barata y las 8 primeras de la lista, para no alejar demasiado el mapa.
+    if (i < 8 || esMejor) limites.push([e.lat, e.lon]);
   });
   mapa.fitBounds(limites, { padding: [30, 30], maxZoom: 15 });
   setTimeout(() => mapa.invalidateSize(), 50); // por si el mapa estaba oculto al crearse

@@ -5,36 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Luzas · Ahorra en luz y gasolina</title>
   <meta name="description" content="Precio de la luz por horas (PVPC), cuándo poner la lavadora y las gasolineras más baratas cerca de ti. Gratis y con datos oficiales.">
-  <meta name="theme-color" content="#0b5d3b">
+  <meta name="theme-color" content="#08061a">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="iconos/icono.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="iconos/icono-192.png">
+  <link rel="preload" href="fuentes/sora.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/estilos.css">
   <!-- Antes de pintar nada, aplicamos el tema guardado para evitar un "parpadeo" blanco. -->
   <script>try { var t = localStorage.getItem('tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
+  <!--
+    Juego de iconos de la app. Se dibujan una sola vez aquí y se usan así:
+      <svg class="icono" aria-hidden="true"><use href="#i-rayo"/></svg>
+    (desde JavaScript: icono('rayo') en js/formato.js)
+  -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-rayo" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-surtidor" viewBox="0 0 24 24"><path d="M3 22h12M4 9h10M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V9.8a2 2 0 0 0-.6-1.4L18 5"/></symbol>
+    <symbol id="i-casa" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M10 21v-6h4v6"/></symbol>
+    <symbol id="i-etiqueta" viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></symbol>
+    <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-luna" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-campana" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a2 2 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-navegar" viewBox="0 0 24 24"><path d="M3 11 22 2l-9 19-2-8z"/></symbol>
+    <symbol id="i-ubicacion" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
+    <symbol id="i-lupa" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-abajo" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-calendario" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol id="i-movil" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-coche" viewBox="0 0 24 24"><path d="M4 16v-4l2.5-5h11L20 12v4zM4 12h16"/><circle cx="7.5" cy="16.5" r="1.5"/><circle cx="16.5" cy="16.5" r="1.5"/></symbol>
+    <symbol id="i-bombilla" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></symbol>
+    <symbol id="i-candado" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-menos" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-mas" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+    <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-ajustes" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 18h3M11 18h9M15 4v4M9 16v4M4 12h13M21 12h-1"/></symbol>
+  </svg>
+
   <a class="saltar" href="#principal">Saltar al contenido</a>
 
   <header class="cabecera">
-    <p class="logo"><span aria-hidden="true">💡⛽</span> Luzas</p>
-    <button id="boton-tema" class="boton-pequeno" type="button">🌙 Oscuro</button>
+    <a class="logo" href="#inicio" aria-label="Luzas, inicio">
+      <span class="logo-marca" aria-hidden="true"><svg class="icono"><use href="#i-rayo"/></svg></span>
+      Luzas
+    </a>
+    <!-- Pestañas: abajo en el móvil (al alcance del pulgar), arriba en pantallas grandes -->
+    <nav class="pestanas" aria-label="Secciones">
+      <a href="#inicio" data-ir="inicio"><svg class="icono" aria-hidden="true"><use href="#i-casa"/></svg>Inicio</a>
+      <a href="#luz" data-ir="luz"><svg class="icono" aria-hidden="true"><use href="#i-rayo"/></svg>Luz</a>
+      <a href="#gasolina" data-ir="gasolina"><svg class="icono" aria-hidden="true"><use href="#i-surtidor"/></svg>Gasolina</a>
+      <a href="#pagamenos" data-ir="pagamenos"><svg class="icono" aria-hidden="true"><use href="#i-etiqueta"/></svg>Paga menos</a>
+    </nav>
+    <button id="boton-tema" class="boton-icono" type="button" aria-label="Cambiar a modo claro">
+      <svg class="icono" aria-hidden="true"><use href="#i-sol"/></svg>
+    </button>
   </header>
 
   <main id="principal" tabindex="-1">
     <!-- INICIO -->
     <section id="vista-inicio" aria-labelledby="t-inicio">
       <h1 id="t-inicio">Hoy puedes ahorrar</h1>
-      <article class="tarjeta resumen">
-        <h2><span aria-hidden="true">💡</span> Luz</h2>
-        <div id="resumen-luz"><p>Cargando precios…</p></div>
-      </article>
-      <article class="tarjeta resumen">
-        <h2><span aria-hidden="true">⛽</span> Gasolina</h2>
-        <div id="resumen-gasolina"><p>Cargando…</p></div>
-      </article>
+      <p class="subtitulo" id="fecha-hoy"></p>
+      <div id="resumen-luz" aria-live="polite">
+        <div class="tarjeta"><span class="esqueleto" style="height:24px;width:40%"></span><span class="esqueleto" style="height:48px;width:70%"></span><span class="esqueleto" style="height:20px"></span></div>
+      </div>
+      <div id="resumen-gasolina" aria-live="polite">
+        <div class="tarjeta"><span class="esqueleto" style="height:24px;width:50%"></span><span class="esqueleto" style="height:48px;width:60%"></span><span class="esqueleto" style="height:20px"></span></div>
+      </div>
       <a class="tarjeta enlace-tarjeta" href="#pagamenos">
-        <span aria-hidden="true">💶</span> <span><strong>Paga menos</strong><br>Ideas para bajar la factura de la luz y el seguro del coche</span>
+        <span class="insignia insignia-primaria" aria-hidden="true"><svg class="icono"><use href="#i-etiqueta"/></svg></span>
+        <span><strong>Paga menos</strong><br><span class="nota">Ideas para bajar la factura de la luz y el seguro del coche</span></span>
+        <svg class="icono flecha" aria-hidden="true"><use href="#i-flecha"/></svg>
       </a>
       <aside class="hueco-anuncio" data-hueco="inicio" aria-label="Publicidad" hidden></aside>
     </section>
@@ -42,7 +85,11 @@
     <!-- LUZ -->
     <section id="vista-luz" aria-labelledby="t-luz" hidden>
       <h1 id="t-luz">Precio de la luz</h1>
-      <div id="contenido-luz" aria-live="polite"><p>Cargando precios…</p></div>
+      <div id="contenido-luz" aria-live="polite">
+        <span class="esqueleto" style="height:56px;margin-top:12px"></span>
+        <span class="esqueleto" style="height:110px"></span>
+        <span class="esqueleto" style="height:180px"></span>
+      </div>
       <p id="estado-luz" class="nota"></p>
       <aside class="hueco-anuncio" data-hueco="luz" aria-label="Publicidad" hidden></aside>
     </section>
@@ -50,7 +97,7 @@
     <!-- GASOLINA -->
     <section id="vista-gasolina" aria-labelledby="t-gasolina" hidden>
       <h1 id="t-gasolina">Gasolineras baratas</h1>
-      <div id="contenido-gasolina"><p>Cargando…</p></div>
+      <div id="contenido-gasolina"></div>
       <div id="resultados-gasolina" aria-live="polite"></div>
       <p id="estado-gasolina" class="nota"></p>
       <aside class="hueco-anuncio" data-hueco="gasolina" aria-label="Publicidad" hidden></aside>
@@ -68,21 +115,13 @@
     </footer>
   </main>
 
-  <!-- Barra de pestañas fija abajo: botones grandes, fáciles de pulsar con el pulgar -->
-  <nav class="pestanas" aria-label="Secciones">
-    <a href="#inicio" data-ir="inicio"><span aria-hidden="true">🏠</span>Inicio</a>
-    <a href="#luz" data-ir="luz"><span aria-hidden="true">💡</span>Luz</a>
-    <a href="#gasolina" data-ir="gasolina"><span aria-hidden="true">⛽</span>Gasolina</a>
-    <a href="#pagamenos" data-ir="pagamenos"><span aria-hidden="true">💶</span>Paga menos</a>
-  </nav>
-
   <!-- Ventana para crear el aviso de la hora barata -->
   <dialog id="dialogo-aviso" aria-labelledby="t-aviso">
-    <h2 id="t-aviso">🔔 Crear aviso</h2>
+    <h2 id="t-aviso"><svg class="icono" aria-hidden="true"><use href="#i-campana"/></svg> Crear aviso</h2>
     <p data-texto></p>
     <p class="nota">Recomendado: el aviso del calendario suena aunque la app esté cerrada.</p>
-    <button class="boton" type="button" data-calendario>📅 Añadir al calendario</button>
-    <button class="boton secundario" type="button" data-notificacion>📱 Avisarme en este móvil</button>
+    <button class="boton" type="button" data-calendario><svg class="icono" aria-hidden="true"><use href="#i-calendario"/></svg> Añadir al calendario</button>
+    <button class="boton secundario" type="button" data-notificacion><svg class="icono" aria-hidden="true"><use href="#i-movil"/></svg> Avisarme en este móvil</button>
     <p class="nota" data-resultado role="status"></p>
     <button class="boton-pequeno" type="button" data-cerrar>Cerrar</button>
   </dialog>

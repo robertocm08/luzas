@@ -7,7 +7,7 @@
 // =====================================================================
 import { cargarLuz, copiaLuz } from './datos-luz.js';
 import { pintarLuz, resumenLuz, prepararDialogoAviso } from './luz.js';
-import { hora, escapar } from './formato.js';
+import { hora, escapar, icono, fechaLarga } from './formato.js';
 import { iniciarGasolina, buscarCercaDeMi, resumenGasolina } from './gasolina.js';
 import { cargarGasolineras, leerPreferencias, pedirUbicacion, ubicacionPermitida } from './datos-gasolina.js';
 import { buscarMunicipio } from './calculos-gasolina.js';
@@ -40,23 +40,22 @@ function asegurarGasolina() {
 window.addEventListener('hashchange', mostrarVista);
 
 // ---- 2. Modo oscuro --------------------------------------------------------
-// Por defecto sigue al móvil. Si el usuario pulsa el botón, recordamos su elección.
+// La app es oscura por defecto (estilo aurora). Con el botón se pasa a la versión
+// clara, y recordamos la elección.
 function aplicarTema(tema) {
-  if (tema) document.documentElement.dataset.theme = tema;
+  if (tema === 'light') document.documentElement.dataset.theme = 'light';
   else delete document.documentElement.dataset.theme;
-  const oscuro = tema ? tema === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const oscuro = tema !== 'light';
   const boton = document.getElementById('boton-tema');
-  boton.textContent = oscuro ? '☀️ Claro' : '🌙 Oscuro';
+  boton.innerHTML = icono(oscuro ? 'sol' : 'luna');
   boton.setAttribute('aria-label', oscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', oscuro ? '#08061a' : '#eef0ff');
 }
 function leerPreferencia(clave) { try { return localStorage.getItem(clave); } catch { return null; } }
 function guardarPreferencia(clave, valor) { try { localStorage.setItem(clave, valor); } catch { /* da igual */ } }
 
 document.getElementById('boton-tema').addEventListener('click', () => {
-  const oscuroAhora = document.documentElement.dataset.theme
-    ? document.documentElement.dataset.theme === 'dark'
-    : matchMedia('(prefers-color-scheme: dark)').matches;
-  const nuevo = oscuroAhora ? 'light' : 'dark';
+  const nuevo = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
   guardarPreferencia('tema', nuevo);
   aplicarTema(nuevo);
 });
@@ -87,15 +86,26 @@ function pintarEstadoDatos(luz) {
   document.getElementById('estado-luz').classList.toggle('aviso-offline', luz.sinConexion);
 }
 
+const NIVEL = { barato: '▼ Barato', normal: '● Normal', caro: '▲ Caro' };
+
+/** Tarjeta de la luz en Inicio: el precio de ahora es el protagonista. */
 function pintarInicio(luz) {
   const caja = document.getElementById('resumen-luz');
   const r = resumenLuz(luz);
-  if (!r) { caja.innerHTML = '<p>No hay datos de la luz ahora mismo.</p>'; return; }
+  if (!r) {
+    caja.innerHTML = `<div class="tarjeta aviso-error"><p>No hemos podido cargar el precio de la luz.</p>
+      <button class="boton secundario" type="button" onclick="location.reload()">Reintentar</button></div>`;
+    return;
+  }
   caja.innerHTML = `
-    ${r.franja ? `<p class="grande">La luz está más barata <strong>${escapar(r.cuando)} ${escapar(r.franja)}</strong>.</p>` : ''}
-    ${r.precioAhora ? `<p>Ahora mismo: <strong>${escapar(r.precioAhora)}</strong>
-       <span class="pastilla nivel-${r.nivelAhora}">${r.nivelAhora === 'barato' ? '▼ Barato' : r.nivelAhora === 'caro' ? '▲ Caro' : '● Normal'}</span></p>` : ''}
-    <a class="boton" href="#luz">Ver todas las horas</a>`;
+    <article class="tarjeta tarjeta-luz">
+      <p class="cabeza-tarjeta"><span class="insignia insignia-luz">${icono('rayo')}</span> Luz ahora</p>
+      ${r.precioNum !== null ? `<p class="dato-grande">${escapar(r.precioNum)} <span class="dato-unidad">€/kWh</span></p>
+        <p><span class="pastilla nivel-${r.nivelAhora}">${NIVEL[r.nivelAhora]}</span></p>` : ''}
+      ${r.franja ? `<p class="grande">${icono('reloj')} Más barata <strong>${escapar(r.cuando)}, ${escapar(r.franja)}</strong></p>` : ''}
+      ${r.aviso ? `<p>${icono('reloj')} ${escapar(r.aviso)}</p>` : ''}
+      <a class="enlace-flecha" href="#luz">Ver todas las horas ${icono('flecha')}</a>
+    </article>`;
 }
 
 /**
@@ -105,8 +115,11 @@ function pintarInicio(luz) {
  */
 async function pintarInicioGasolina() {
   const caja = document.getElementById('resumen-gasolina');
-  const boton = `<button class="boton" type="button" id="inicio-cerca">📍 Ver la más barata cerca de mí</button>
-    <a class="boton secundario" href="#gasolina">Buscar por municipio</a>`;
+  const tarjeta = (contenido) => `<article class="tarjeta tarjeta-gas">
+      <p class="cabeza-tarjeta"><span class="insignia insignia-gas">${icono('surtidor')}</span> Gasolina más barata</p>
+      ${contenido}</article>`;
+  const boton = `<button class="boton" type="button" id="inicio-cerca">${icono('ubicacion')} Buscar cerca de mí</button>
+    <a class="enlace-flecha" href="#gasolina">O escribe tu municipio ${icono('flecha')}</a>`;
   const conectarBoton = () => caja.querySelector('#inicio-cerca')?.addEventListener('click', () => {
     location.hash = '#gasolina';
     asegurarGasolina();
@@ -127,19 +140,20 @@ async function pintarInicioGasolina() {
       if (m) { punto = m.centro; zona = m.municipio; }
     }
     if (!punto) {
-      caja.innerHTML = `<p>Encuentra la gasolinera más barata de tu zona y cuánto ahorras llenando el depósito.</p>${boton}`;
+      caja.innerHTML = tarjeta(`<p class="grande">Encuentra la más barata de tu zona y cuánto ahorras llenando el depósito.</p>${boton}`);
       conectarBoton();
       return;
     }
     const r = await resumenGasolina(punto, zona);
-    if (!r) { caja.innerHTML = `<p>No hay gasolineras cerca con tu combustible.</p>${boton}`; conectarBoton(); return; }
-    caja.innerHTML = `
-      <p class="grande">La gasolinera más barata cerca de ${escapar(zona)} es <strong>${escapar(r.rotulo)}</strong>:
-        ${escapar(r.precio)} de ${escapar(r.combustible)}, a ${escapar(r.distancia)}.</p>
-      ${r.ahorro ? `<p>Ahorras <strong>${escapar(r.ahorro)}</strong> llenando ${r.litros} L frente a la media.</p>` : ''}
-      <a class="boton" href="#gasolina">Ver todas</a>`;
+    if (!r) { caja.innerHTML = tarjeta(`<p>No hay gasolineras cerca con tu combustible.</p>${boton}`); conectarBoton(); return; }
+    caja.innerHTML = tarjeta(`
+      <p class="dato-grande">${escapar(r.precioNum)} <span class="dato-unidad">€/L</span></p>
+      <p class="grande"><strong>${escapar(r.rotulo)}</strong> · a ${escapar(r.distancia)}</p>
+      <p class="nota">${escapar(r.combustible)}, cerca de ${escapar(zona)}</p>
+      ${r.ahorro ? `<p><span class="ahorro positivo">▼ Ahorras ${escapar(r.ahorro)} llenando ${r.litros} L</span></p>` : ''}
+      <a class="enlace-flecha" href="#gasolina">Ver todas las gasolineras ${icono('flecha')}</a>`);
   } catch {
-    caja.innerHTML = `<p>No hemos podido cargar las gasolineras ahora mismo.</p>${boton}`;
+    caja.innerHTML = tarjeta(`<p>No hemos podido cargar las gasolineras ahora mismo.</p>${boton}`);
     conectarBoton();
   }
 }
@@ -151,7 +165,7 @@ if ('serviceWorker' in navigator) {
 
 // ---- Arranque ---------------------------------------------------------------
 aplicarTema(leerPreferencia('tema'));
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => aplicarTema(leerPreferencia('tema')));
+document.getElementById('fecha-hoy').textContent = fechaLarga(new Date());
 prepararDialogoAviso();
 mostrarVista();
 cargarTodo();

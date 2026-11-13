@@ -57,7 +57,7 @@ jobs:
       - name: Preparar la carpeta que se publica
         run: |
           mkdir _site
-          cp -r index.html manifest.json sw.js css js iconos data _site/
+          cp -r index.html manifest.json sw.js css js iconos fuentes data _site/
           [ -f privacidad.html ] && cp privacidad.html _site/ || true
 
       - uses: actions/upload-pages-artifact@v3
