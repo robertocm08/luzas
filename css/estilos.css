@@ -202,6 +202,42 @@ input[type="number"], input[type="search"] {
 }
 .marcador-mejor span { background: #1e8e4e; width: 40px; height: 40px; margin: -3px; font-size: 17px; }
 
+/* ---- Inicio: enlace a "Paga menos" ---- */
+.enlace-tarjeta { display: flex; gap: 12px; align-items: center; color: var(--texto); text-decoration: none; }
+.enlace-tarjeta > span:first-child { font-size: 2rem; }
+
+/* ---- Publicidad: siempre señalada y separada del contenido ---- */
+.hueco-anuncio { margin: 28px 0 12px; padding-top: 8px; border-top: 1px dashed var(--borde); }
+.etiqueta-publicidad {
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--texto-suave); margin: 0 0 6px;
+}
+.anuncio-demo {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  min-height: 100px; border: 2px dashed var(--borde); border-radius: var(--radio); color: var(--texto-suave);
+}
+.lista-ofertas { list-style: none; padding: 0; margin: 0; }
+.oferta { border-left: 6px solid var(--normal); }
+.lista-consejos { padding-left: 36px; }
+.lista-consejos li { margin: 6px 0; }
+
+/* ---- Aviso de cookies: encima de la barra de pestañas ---- */
+.aviso-cookies {
+  position: fixed; left: 0; right: 0; z-index: 20;
+  bottom: calc(68px + env(safe-area-inset-bottom));
+  max-height: 70vh; overflow-y: auto;
+  background: var(--superficie); color: var(--texto); border-top: 3px solid var(--primario);
+  padding: 16px; box-shadow: 0 -4px 16px rgb(0 0 0 / 0.2);
+}
+.aviso-cookies h2 { margin-top: 0; }
+.aviso-cookies-botones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.aviso-cookies-botones .boton { margin-top: 4px; }
+/* Mismo aspecto para Aceptar y Rechazar: rechazar debe ser igual de fácil */
+body.con-aviso-cookies { padding-bottom: 60vh; }
+
+/* ---- Pie ---- */
+.pie { margin-top: 32px; padding-top: 12px; border-top: 1px solid var(--borde); font-size: 0.95rem; color: var(--texto-suave); }
+
 /* ---- Barra de pestañas inferior ---- */
 .pestanas {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;

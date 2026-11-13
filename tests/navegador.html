@@ -28,7 +28,8 @@
 <ul id="lista"></ul>
 <script type="module">
   import { resultados } from './mini-node/test.js';
-  const archivos = ['./calculos-luz.test.mjs', './aviso.test.mjs', './calculos-gasolina.test.mjs'];
+  const archivos = ['./calculos-luz.test.mjs', './aviso.test.mjs', './calculos-gasolina.test.mjs',
+    './consentimiento.test.mjs', './ingresos.test.mjs'];
   for (const a of archivos) {
     try { await import(a); } catch (e) { if (!String(e).includes('Failed to fetch')) resultados.push({ nombre: a, ok: false, error: e }); }
   }

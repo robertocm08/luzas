@@ -11,6 +11,8 @@ import { hora, escapar } from './formato.js';
 import { iniciarGasolina, buscarCercaDeMi, resumenGasolina } from './gasolina.js';
 import { cargarGasolineras, leerPreferencias, pedirUbicacion, ubicacionPermitida } from './datos-gasolina.js';
 import { buscarMunicipio } from './calculos-gasolina.js';
+import { iniciarAnuncios } from './anuncios.js';
+import { pintarPagaMenos } from './pagamenos.js';
 
 // ---- 1. Pestañas -----------------------------------------------------------
 // Usamos la parte de la dirección tras la "#" (#luz, #gasolina...). Así el botón
@@ -154,5 +156,7 @@ prepararDialogoAviso();
 mostrarVista();
 cargarTodo();
 pintarInicioGasolina();
+pintarPagaMenos(document.getElementById('contenido-pagamenos'));
+iniciarAnuncios(); // solo hace algo si los anuncios están activos en config.js
 // Si la app se queda abierta, refrescamos cada 15 minutos (el precio cambia cada hora).
 setInterval(cargarTodo, 15 * 60_000);

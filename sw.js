@@ -8,7 +8,7 @@
 // Si cambias la lista de archivos, sube el número de VERSION para que los
 // móviles borren la copia antigua.
 // =====================================================================
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE_APP = `luzas-app-${VERSION}`;
 const CACHE_DATOS = 'luzas-datos';
 const DESARROLLO = ['localhost', '127.0.0.1'].includes(self.location.hostname);
@@ -29,6 +29,11 @@ const ARCHIVOS_APP = [
   'js/datos-gasolina.js',
   'js/gasolina.js',
   'js/mapa.js',
+  'js/config.js',
+  'js/consentimiento.js',
+  'js/anuncios.js',
+  'js/pagamenos.js',
+  'privacidad.html',
   'iconos/icono.svg',
   'iconos/icono-192.png',
 ];

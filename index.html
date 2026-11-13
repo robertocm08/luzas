@@ -33,6 +33,10 @@
         <h2><span aria-hidden="true">⛽</span> Gasolina</h2>
         <div id="resumen-gasolina"><p>Cargando…</p></div>
       </article>
+      <a class="tarjeta enlace-tarjeta" href="#pagamenos">
+        <span aria-hidden="true">💶</span> <span><strong>Paga menos</strong><br>Ideas para bajar la factura de la luz y el seguro del coche</span>
+      </a>
+      <aside class="hueco-anuncio" data-hueco="inicio" aria-label="Publicidad" hidden></aside>
     </section>
 
     <!-- LUZ -->
@@ -40,6 +44,7 @@
       <h1 id="t-luz">Precio de la luz</h1>
       <div id="contenido-luz" aria-live="polite"><p>Cargando precios…</p></div>
       <p id="estado-luz" class="nota"></p>
+      <aside class="hueco-anuncio" data-hueco="luz" aria-label="Publicidad" hidden></aside>
     </section>
 
     <!-- GASOLINA -->
@@ -48,13 +53,19 @@
       <div id="contenido-gasolina"><p>Cargando…</p></div>
       <div id="resultados-gasolina" aria-live="polite"></div>
       <p id="estado-gasolina" class="nota"></p>
+      <aside class="hueco-anuncio" data-hueco="gasolina" aria-label="Publicidad" hidden></aside>
     </section>
 
-    <!-- PAGA MENOS (fase 3) -->
+    <!-- PAGA MENOS -->
     <section id="vista-pagamenos" aria-labelledby="t-pagamenos" hidden>
       <h1 id="t-pagamenos">Paga menos</h1>
-      <p class="tarjeta">Muy pronto.</p>
+      <div id="contenido-pagamenos"></div>
     </section>
+
+    <footer class="pie">
+      <a href="privacidad.html">Privacidad y cookies</a> ·
+      Datos oficiales de Red Eléctrica de España y del Ministerio para la Transición Ecológica
+    </footer>
   </main>
 
   <!-- Barra de pestañas fija abajo: botones grandes, fáciles de pulsar con el pulgar -->

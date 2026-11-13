@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacidad y cookies · Luzas</title>
+  <meta name="theme-color" content="#0b5d3b">
+  <link rel="icon" href="iconos/icono.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script>try { var t = localStorage.getItem('tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+  <style>body { padding-bottom: 32px; } main h2 { margin-top: 2rem; }</style>
+</head>
+<body>
+  <header class="cabecera">
+    <p class="logo"><span aria-hidden="true">💡⛽</span> Luzas</p>
+    <a class="boton-pequeno" href="./">← Volver a la app</a>
+  </header>
+  <main>
+    <h1>Privacidad y cookies</h1>
+    <p class="nota">Última actualización: 13 de noviembre de 2026</p>
+
+    <div class="tarjeta">
+      <h2 style="margin-top:0">En resumen</h2>
+      <ul>
+        <li>No tenemos servidor ni base de datos: <strong>no recogemos ni guardamos datos tuyos</strong>.</li>
+        <li>Tu <strong>ubicación</strong> solo se usa dentro de tu móvil para medir distancias. No se guarda ni se envía.</li>
+        <li>Solo hay <strong>cookies de publicidad si las aceptas</strong>. Si las rechazas, la app funciona igual.</li>
+      </ul>
+    </div>
+
+    <h2>Tu decisión sobre las cookies</h2>
+    <div class="tarjeta" id="estado-cookies"><p>Cargando…</p></div>
+
+    <h2>Quién es el responsable</h2>
+    <p id="titular">—</p>
+
+    <h2>Qué se guarda en tu móvil</h2>
+    <p>Para que la app sea cómoda, tu navegador guarda en tu propio dispositivo (no se envía a nadie):</p>
+    <ul>
+      <li>El combustible, los litros del depósito y el último municipio que buscaste.</li>
+      <li>Si prefieres el modo claro u oscuro.</li>
+      <li>Los últimos precios descargados, para poder usar la app sin conexión.</li>
+      <li>Tu decisión sobre las cookies (durante 12 meses).</li>
+    </ul>
+    <p>Esto no son cookies de seguimiento y es imprescindible para el funcionamiento que pides. Puedes borrarlo
+       en cualquier momento desde los ajustes de tu navegador («Borrar datos de sitios»).</p>
+
+    <h2>Tu ubicación</h2>
+    <p>Solo si pulsas «Buscar cerca de mí» (o si ya diste permiso antes), el navegador nos dice dónde estás. La
+       usamos únicamente en tu móvil para calcular la distancia a cada gasolinera. <strong>No se guarda ni se
+       envía a ningún servidor.</strong> Puedes quitar el permiso en los ajustes del navegador.</p>
+
+    <h2>Publicidad y cookies de terceros</h2>
+    <p>Si la app muestra anuncios, lo hace a través de <strong>Google AdSense</strong>. Google y sus socios
+       pueden usar cookies para mostrar y medir anuncios, y para personalizarlos. <strong>Solo se cargan si
+       pulsas «Aceptar»</strong> en el aviso de cookies. Más información:
+       <a href="https://policies.google.com/technologies/ads?hl=es" target="_blank" rel="noopener">cómo usa Google las cookies en publicidad</a>.</p>
+
+    <h2>Enlaces de afiliado</h2>
+    <p>En «Paga menos» puede haber ofertas marcadas como <strong>«Publicidad»</strong>. Son enlaces de afiliado:
+       si contratas a través de ellos podemos recibir una comisión, sin coste para ti. Al pulsarlos vas a la web
+       de esa empresa, que tiene su propia política de privacidad.</p>
+
+    <h2>Servicios externos que usa la app</h2>
+    <p>Como cualquier web, al cargar estos recursos tu navegador muestra tu dirección IP a quien los sirve:</p>
+    <ul>
+      <li><strong>GitHub Pages</strong> (aloja la app).</li>
+      <li><strong>Red Eléctrica de España</strong> y el <strong>Ministerio para la Transición Ecológica</strong> (precios oficiales, solo si los datos guardados están desactualizados).</li>
+      <li><strong>OpenStreetMap</strong> (imágenes del mapa) y <strong>cdnjs/Cloudflare</strong> (programa del mapa), solo al abrir la pestaña Gasolina.</li>
+    </ul>
+
+    <h2>Tus derechos</h2>
+    <p>Como no guardamos datos tuyos, no hay nada que consultar, corregir o borrar en nuestro lado. Si tienes
+       dudas, escríbenos al correo de arriba. También puedes reclamar ante la
+       <a href="https://www.aepd.es" target="_blank" rel="noopener">Agencia Española de Protección de Datos</a>.</p>
+
+    <p><a class="boton secundario" href="./">← Volver a la app</a></p>
+  </main>
+
+  <script type="module">
+    import { CONFIG } from './js/config.js';
+    import { leerConsentimiento, olvidarConsentimiento } from './js/consentimiento.js';
+    import { modoAnuncios } from './js/anuncios.js';
+    import { escapar } from './js/formato.js';
+
+    // Responsable (sale de config.js)
+    const t = CONFIG.titular;
+    document.getElementById('titular').innerHTML = t.nombre
+      ? `${escapar(t.nombre)}${t.nif ? ` (NIF ${escapar(t.nif)})` : ''}${t.correo ? ` · Contacto: <a href="mailto:${escapar(t.correo)}">${escapar(t.correo)}</a>` : ''}`
+      : 'Pendiente de completar por el titular de la app.';
+
+    // Estado de las cookies y botón para cambiar la decisión
+    function pintar() {
+      const caja = document.getElementById('estado-cookies');
+      if (modoAnuncios() === 'ninguno') {
+        caja.innerHTML = '<p>Ahora mismo la app <strong>no muestra anuncios ni usa cookies</strong>. No tienes que decidir nada.</p>';
+        return;
+      }
+      const textos = {
+        aceptado: 'Has <strong>aceptado</strong> las cookies de publicidad.',
+        rechazado: 'Has <strong>rechazado</strong> las cookies de publicidad. No se cargan anuncios.',
+        pendiente: 'Todavía <strong>no has decidido</strong>. Te preguntaremos al abrir la app.',
+      };
+      const estado = leerConsentimiento();
+      caja.innerHTML = `<p>${textos[estado]}</p>
+        ${estado !== 'pendiente' ? '<button class="boton secundario" type="button" id="cambiar">Cambiar mi decisión</button>' : ''}`;
+      document.getElementById('cambiar')?.addEventListener('click', () => {
+        olvidarConsentimiento();
+        location.href = './' + location.search; // vuelve a la app, que preguntará de nuevo
+      });
+    }
+    pintar();
+  </script>
+</body>
+</html>
