@@ -1,0 +1,21 @@
+{
+  "name": "Luzas · Ahorra en luz y gasolina",
+  "short_name": "Luzas",
+  "description": "Precio de la luz por horas y gasolineras más baratas cerca de ti.",
+  "lang": "es-ES",
+  "start_url": "./#inicio",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f7f4",
+  "theme_color": "#0b5d3b",
+  "icons": [
+    { "src": "iconos/icono-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "iconos/icono-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "iconos/icono-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Precio de la luz", "url": "./#luz", "icons": [{ "src": "iconos/icono-192.png", "sizes": "192x192" }] },
+    { "name": "Gasolineras baratas", "url": "./#gasolina", "icons": [{ "src": "iconos/icono-192.png", "sizes": "192x192" }] }
+  ]
+}

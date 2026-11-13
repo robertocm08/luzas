@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Luzas · Ahorra en luz y gasolina</title>
+  <meta name="description" content="Precio de la luz por horas (PVPC), cuándo poner la lavadora y las gasolineras más baratas cerca de ti. Gratis y con datos oficiales.">
+  <meta name="theme-color" content="#0b5d3b">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="iconos/icono.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="iconos/icono-192.png">
+  <link rel="stylesheet" href="css/estilos.css">
+  <!-- Antes de pintar nada, aplicamos el tema guardado para evitar un "parpadeo" blanco. -->
+  <script>try { var t = localStorage.getItem('tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+  <a class="saltar" href="#principal">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <p class="logo"><span aria-hidden="true">💡⛽</span> Luzas</p>
+    <button id="boton-tema" class="boton-pequeno" type="button">🌙 Oscuro</button>
+  </header>
+
+  <main id="principal" tabindex="-1">
+    <!-- INICIO -->
+    <section id="vista-inicio" aria-labelledby="t-inicio">
+      <h1 id="t-inicio">Hoy puedes ahorrar</h1>
+      <article class="tarjeta resumen">
+        <h2><span aria-hidden="true">💡</span> Luz</h2>
+        <div id="resumen-luz"><p>Cargando precios…</p></div>
+      </article>
+      <article class="tarjeta resumen">
+        <h2><span aria-hidden="true">⛽</span> Gasolina</h2>
+        <div id="resumen-gasolina"><p>Muy pronto: la gasolinera más barata cerca de ti.</p></div>
+      </article>
+    </section>
+
+    <!-- LUZ -->
+    <section id="vista-luz" aria-labelledby="t-luz" hidden>
+      <h1 id="t-luz">Precio de la luz</h1>
+      <div id="contenido-luz" aria-live="polite"><p>Cargando precios…</p></div>
+      <p id="estado-luz" class="nota"></p>
+    </section>
+
+    <!-- GASOLINA (fase 2) -->
+    <section id="vista-gasolina" aria-labelledby="t-gasolina" hidden>
+      <h1 id="t-gasolina">Gasolineras baratas</h1>
+      <p class="tarjeta">Muy pronto.</p>
+    </section>
+
+    <!-- PAGA MENOS (fase 3) -->
+    <section id="vista-pagamenos" aria-labelledby="t-pagamenos" hidden>
+      <h1 id="t-pagamenos">Paga menos</h1>
+      <p class="tarjeta">Muy pronto.</p>
+    </section>
+  </main>
+
+  <!-- Barra de pestañas fija abajo: botones grandes, fáciles de pulsar con el pulgar -->
+  <nav class="pestanas" aria-label="Secciones">
+    <a href="#inicio" data-ir="inicio"><span aria-hidden="true">🏠</span>Inicio</a>
+    <a href="#luz" data-ir="luz"><span aria-hidden="true">💡</span>Luz</a>
+    <a href="#gasolina" data-ir="gasolina"><span aria-hidden="true">⛽</span>Gasolina</a>
+    <a href="#pagamenos" data-ir="pagamenos"><span aria-hidden="true">💶</span>Paga menos</a>
+  </nav>
+
+  <!-- Ventana para crear el aviso de la hora barata -->
+  <dialog id="dialogo-aviso" aria-labelledby="t-aviso">
+    <h2 id="t-aviso">🔔 Crear aviso</h2>
+    <p data-texto></p>
+    <p class="nota">Recomendado: el aviso del calendario suena aunque la app esté cerrada.</p>
+    <button class="boton" type="button" data-calendario>📅 Añadir al calendario</button>
+    <button class="boton secundario" type="button" data-notificacion>📱 Avisarme en este móvil</button>
+    <p class="nota" data-resultado role="status"></p>
+    <button class="boton-pequeno" type="button" data-cerrar>Cerrar</button>
+  </dialog>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

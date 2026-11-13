@@ -1,0 +1,182 @@
+/* =====================================================================
+   estilos.css — Aspecto de la app.
+   Pensada primero para el móvil: textos grandes, alto contraste,
+   botones de al menos 48 px de alto y modo oscuro.
+   Los colores se definen una sola vez como "variables" (--nombre) y el
+   modo oscuro simplemente cambia esas variables.
+   ===================================================================== */
+
+:root {
+  --fondo: #f6f7f4;
+  --superficie: #ffffff;
+  --texto: #15171a;
+  --texto-suave: #4a5058;
+  --borde: #d5d9dd;
+  --primario: #0b5d3b;
+  --primario-texto: #ffffff;
+  --foco: #1a56db;
+
+  --barato: #1e8e4e;  --barato-fondo: #dcf3e5;  --barato-texto: #0b4d26;
+  --normal: #c98a00;  --normal-fondo: #fff1c7;  --normal-texto: #5c3f00;
+  --caro:   #d23f3f;  --caro-fondo:   #fde2e2;  --caro-texto:   #861b1b;
+
+  --radio: 14px;
+  --sombra: 0 1px 3px rgb(0 0 0 / 0.08);
+  color-scheme: light;
+}
+
+/* Modo oscuro automático (si el móvil está en oscuro y el usuario no eligió otra cosa) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fondo: #101214; --superficie: #1b1e22; --texto: #f1f3f5; --texto-suave: #b6bcc4;
+    --borde: #33383f; --primario: #3ecf8e; --primario-texto: #06281a; --foco: #8ab4ff;
+    --barato: #3ecf8e; --barato-fondo: #12392a; --barato-texto: #a8f0cb;
+    --normal: #f2b632; --normal-fondo: #3d2f0b; --normal-texto: #ffe2a0;
+    --caro:   #ff6b6b; --caro-fondo:   #451a1a; --caro-texto:   #ffc2c2;
+    --sombra: none; color-scheme: dark;
+  }
+}
+/* Modo oscuro elegido a mano con el botón */
+:root[data-theme="dark"] {
+  --fondo: #101214; --superficie: #1b1e22; --texto: #f1f3f5; --texto-suave: #b6bcc4;
+  --borde: #33383f; --primario: #3ecf8e; --primario-texto: #06281a; --foco: #8ab4ff;
+  --barato: #3ecf8e; --barato-fondo: #12392a; --barato-texto: #a8f0cb;
+  --normal: #f2b632; --normal-fondo: #3d2f0b; --normal-texto: #ffe2a0;
+  --caro:   #ff6b6b; --caro-fondo:   #451a1a; --caro-texto:   #ffc2c2;
+  --sombra: none; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font: 1.125rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* 18 px */
+  background: var(--fondo);
+  color: var(--texto);
+  /* deja sitio para la barra de pestañas fija de abajo */
+  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+}
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 0.5rem 0 1rem; }
+h2 { font-size: 1.3rem; margin: 1.75rem 0 0.5rem; }
+h3 { font-size: 1.15rem; margin: 0 0 0.25rem; }
+p { margin: 0.4rem 0; }
+a { color: var(--primario); }
+
+/* Contorno muy visible al navegar con teclado */
+:focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
+#principal:focus { outline: none; }
+
+.saltar { position: absolute; left: -999px; }
+.saltar:focus { left: 8px; top: 8px; z-index: 10; background: var(--superficie); padding: 8px; }
+
+/* ---- Cabecera y contenido ---- */
+.cabecera {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; padding-top: calc(10px + env(safe-area-inset-top));
+  background: var(--superficie); border-bottom: 1px solid var(--borde);
+}
+.logo { font-weight: 800; font-size: 1.3rem; margin: 0; }
+main { max-width: 640px; margin: 0 auto; padding: 8px 16px 24px; }
+
+/* ---- Tarjetas ---- */
+.tarjeta {
+  background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio);
+  padding: 16px; margin: 12px 0; box-shadow: var(--sombra);
+}
+.resumen h2 { margin-top: 0; }
+.grande { font-size: 1.25rem; }
+.nota { color: var(--texto-suave); font-size: 1rem; }
+.fecha { color: var(--texto-suave); margin-top: 0; }
+.ya { background: var(--barato-fondo); color: var(--barato-texto); }
+.ejemplos { font-weight: normal; color: var(--texto-suave); font-size: 1rem; }
+.aviso-info { border-left: 6px solid var(--normal); }
+.aviso-error { border-left: 6px solid var(--caro); }
+.aviso-offline { color: var(--normal-texto); background: var(--normal-fondo); padding: 8px 12px; border-radius: 8px; }
+
+/* ---- Botones (mínimo 48 px de alto, fáciles de pulsar) ---- */
+.boton, .boton-pequeno, .boton-dia {
+  font: inherit; cursor: pointer; border-radius: 12px; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.boton {
+  min-height: 52px; padding: 10px 18px; margin-top: 10px; width: 100%;
+  background: var(--primario); color: var(--primario-texto); border: 2px solid var(--primario); font-weight: 700;
+}
+.boton.secundario { background: transparent; color: var(--primario); }
+.boton-pequeno {
+  min-height: 44px; padding: 6px 14px; background: transparent; color: var(--texto);
+  border: 2px solid var(--borde);
+}
+
+/* ---- Selector Hoy / Mañana ---- */
+.selector-dia { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.boton-dia {
+  min-height: 52px; background: var(--superficie); color: var(--texto);
+  border: 2px solid var(--borde); font-weight: 700;
+}
+.boton-dia[aria-pressed="true"] { background: var(--primario); color: var(--primario-texto); border-color: var(--primario); }
+
+/* ---- Tarjeta "Ahora mismo" ---- */
+.ahora { border-left-width: 8px; }
+.ahora.nivel-barato { border-left-color: var(--barato); }
+.ahora.nivel-normal { border-left-color: var(--normal); }
+.ahora.nivel-caro   { border-left-color: var(--caro); }
+.etiqueta { margin: 0; color: var(--texto-suave); }
+.precio-grande { font-size: 2.2rem; font-weight: 800; margin: 0; }
+.nivel { font-weight: 700; margin: 0; }
+
+/* ---- Recomendaciones ---- */
+.lista-franjas { list-style: none; padding: 0; margin: 0; }
+
+/* ---- Pastillas de color (barato / normal / caro) ---- */
+.pastilla { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: 1rem; }
+.pastilla.nivel-barato { background: var(--barato-fondo); color: var(--barato-texto); }
+.pastilla.nivel-normal { background: var(--normal-fondo); color: var(--normal-texto); }
+.pastilla.nivel-caro   { background: var(--caro-fondo);   color: var(--caro-texto); }
+.leyenda { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ---- Gráfico de barras horizontal: una fila por hora ---- */
+.grafico { list-style: none; padding: 0; margin: 8px 0; }
+.fila {
+  display: grid; grid-template-columns: 3.4rem 1fr 5.2rem; align-items: center; gap: 8px;
+  padding: 5px 6px; border-radius: 8px;
+}
+.g-hora { font-variant-numeric: tabular-nums; font-weight: 600; }
+.g-barra { height: 22px; background: var(--borde); border-radius: 6px; }
+.g-barra > span { display: block; height: 100%; border-radius: 6px; }
+.g-precio { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.fila.nivel-barato .g-barra > span { background: var(--barato); }
+.fila.nivel-normal .g-barra > span { background: var(--normal); }
+.fila.nivel-caro   .g-barra > span { background: var(--caro); }
+.fila.nivel-barato .g-precio { color: var(--barato-texto); }
+.fila.nivel-normal .g-precio { color: var(--normal-texto); }
+.fila.nivel-caro   .g-precio { color: var(--caro-texto); }
+.fila.es-ahora { outline: 3px solid var(--texto); background: var(--superficie); }
+
+/* ---- Barra de pestañas inferior ---- */
+.pestanas {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: var(--superficie); border-top: 1px solid var(--borde);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pestanas a {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 68px; font-size: 0.95rem; font-weight: 600; color: var(--texto-suave); text-decoration: none;
+}
+.pestanas a span { font-size: 1.5rem; line-height: 1.1; }
+.pestanas a[aria-current="page"] { color: var(--primario); box-shadow: inset 0 4px 0 var(--primario); }
+
+/* ---- Ventana de aviso ---- */
+dialog {
+  border: none; border-radius: var(--radio); padding: 20px; width: min(92vw, 440px);
+  background: var(--superficie); color: var(--texto);
+}
+dialog::backdrop { background: rgb(0 0 0 / 0.5); }
+dialog h2 { margin-top: 0; }
+dialog .boton-pequeno { margin-top: 12px; width: 100%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .boton, .boton-dia { transition: transform 0.1s; }
+  .boton:active, .boton-dia:active { transform: scale(0.98); }
+}

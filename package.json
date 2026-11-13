@@ -1,0 +1,13 @@
+{
+  "name": "luzas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ahorra en luz y gasolina: PVPC por horas y gasolineras baratas. Sin servidor, publicada en GitHub Pages.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"tests/*.test.mjs\"",
+    "datos": "node scripts/descargar-datos.mjs",
+    "servidor": "python scripts/servidor-local.py"
+  },
+  "engines": { "node": ">=22" }
+}

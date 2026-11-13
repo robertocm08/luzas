@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pruebas en el navegador</title>
+<!--
+  Truco: los archivos de prueba piden 'node:test' y 'node:assert/strict', que
+  solo existen en Node. Este "importmap" le dice al navegador que use en su lugar
+  dos versiones mínimas que hay en esta misma carpeta. Así las MISMAS pruebas
+  funcionan en GitHub (con Node) y aquí (sin instalar nada).
+-->
+<script type="importmap">
+{ "imports": {
+  "node:test": "./mini-node/test.js",
+  "node:assert/strict": "./mini-node/assert.js"
+} }
+</script>
+<style>
+  body { font: 18px/1.5 system-ui, sans-serif; margin: 16px; background: #fff; color: #111; }
+  .ok { color: #0a6b2f; } .fallo { color: #b00020; font-weight: bold; }
+  pre { white-space: pre-wrap; background: #f4f4f4; padding: 8px; }
+</style>
+</head>
+<body>
+<h1>Pruebas automáticas</h1>
+<p id="resumen">Ejecutando…</p>
+<ul id="lista"></ul>
+<script type="module">
+  import { resultados } from './mini-node/test.js';
+  const archivos = ['./calculos-luz.test.mjs', './aviso.test.mjs', './calculos-gasolina.test.mjs'];
+  for (const a of archivos) {
+    try { await import(a); } catch (e) { if (!String(e).includes('Failed to fetch')) resultados.push({ nombre: a, ok: false, error: e }); }
+  }
+  await Promise.all(resultados.map((r) => r.promesa));
+  const lista = document.getElementById('lista');
+  for (const r of resultados) {
+    const li = document.createElement('li');
+    li.className = r.ok ? 'ok' : 'fallo';
+    li.textContent = (r.ok ? '✔ ' : '✘ ') + r.nombre;
+    if (!r.ok) { const pre = document.createElement('pre'); pre.textContent = r.error?.message ?? r.error; li.append(pre); }
+    lista.append(li);
+  }
+  const fallos = resultados.filter((r) => !r.ok).length;
+  document.getElementById('resumen').textContent = `${resultados.length - fallos} correctas, ${fallos} fallidas`;
+  document.body.dataset.fallos = fallos;
+</script>
+</body>
+</html>

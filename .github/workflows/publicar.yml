@@ -1,0 +1,69 @@
+# Descarga los datos oficiales y publica la app en GitHub Pages.
+#
+# Cuándo se ejecuta:
+#   - Cada hora (minuto 7), para tener los precios al día.
+#   - A las 19:25 y 19:45 UTC (20:25 / 20:45 en invierno en Madrid), justo
+#     después de que Red Eléctrica publique los precios de mañana.
+#   - Cada vez que subes un cambio a la rama main.
+#   - A mano, desde la pestaña "Actions" → "Publicar" → "Run workflow".
+#
+# Los datos NO se guardan en el historial del repositorio (crecería sin parar):
+# se publican directamente junto a la app.
+name: Publicar
+
+on:
+  schedule:
+    - cron: '7 * * * *'
+    - cron: '25,45 19 * * *'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Nunca dos publicaciones a la vez.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pruebas (si fallan, no se publica nada)
+        run: npm test
+
+      - name: Configurar GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Descargar datos oficiales
+        run: node scripts/descargar-datos.mjs
+        env:
+          SITE_URL: ${{ steps.pages.outputs.base_url }}/
+
+      - name: Preparar la carpeta que se publica
+        run: |
+          mkdir _site
+          cp -r index.html manifest.json sw.js css js iconos data _site/
+          [ -f privacidad.html ] && cp privacidad.html _site/ || true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Publicar
+        id: despliegue
+        uses: actions/deploy-pages@v4

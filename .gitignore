@@ -1,0 +1,6 @@
+# Datos descargados: se generan en GitHub cada hora, no se guardan en el repositorio.
+data/
+_site/
+node_modules/
+# Configuración local del editor / de Claude
+.claude/
