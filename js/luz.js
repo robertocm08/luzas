@@ -205,7 +205,7 @@ export function prepararDialogoAviso() {
   dialogo.querySelector('[data-calendario]').addEventListener('click', () => {
     const a = estado.avisoPendiente;
     descargarICS({ inicio: a.inicio, fin: a.fin, titulo: titulo(),
-      descripcion: 'Buen momento para poner la lavadora, el lavavajillas u otros aparatos. Aviso creado con Luzas.' });
+      descripcion: 'Buen momento para poner la lavadora, el lavavajillas u otros aparatos. Aviso creado con Batata.' });
     resultado.textContent = 'Abre el archivo descargado para añadirlo a tu calendario. Sonará 15 minutos antes.';
   });
   dialogo.querySelector('[data-notificacion]').addEventListener('click', async () => {

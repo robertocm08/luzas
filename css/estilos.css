@@ -181,12 +181,10 @@ strong { font-weight: 700; }
 }
 .logo { display: flex; align-items: center; gap: 10px; margin: 0; font-weight: 700; font-size: 1.3rem; letter-spacing: -0.03em; color: var(--texto); text-decoration: none; }
 .logo-marca {
-  display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
-  border-radius: 13px; color: #ffe066;
-  background: linear-gradient(135deg, var(--boton-desde), var(--boton-hasta));
-  box-shadow: 0 0 18px rgb(124 58 237 / 0.55);
+  display: block; width: 40px; height: 40px; flex: none;
+  border-radius: 11px;
+  box-shadow: 0 0 18px rgb(168 85 247 / 0.55);
 }
-.logo-marca .icono { width: 22px; height: 22px; fill: currentColor; stroke: none; filter: drop-shadow(0 0 4px rgb(255 224 102 / 0.8)); }
 .boton-icono {
   margin-left: auto; width: 48px; height: 48px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
   border: 1px solid var(--cristal-borde); background: var(--relleno); color: var(--texto); cursor: pointer; font: inherit;

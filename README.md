@@ -1,4 +1,4 @@
-# 💡⛽ Luzas — Ahorra en luz y gasolina
+# 🍠⚡ Batata — Ahorra en luz y gasolina
 
 App web gratuita, pensada para el móvil, que ayuda a cualquier persona a pagar menos:
 
